@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>اختبار الشلال — أي مهنة تناسبك؟</title>
+<meta name="description" content="اختبار مستوحى من Dragon Quest III: أجب عن أسئلة عرّافة الشلال واكتشف أي مهنة مغامرة تناسب روحك — محارب، ساحر، لص، أم البطل النادر؟">
+<meta name="theme-color" content="#08141c">
+
+<!-- Open Graph / Twitter (حدّث الروابط لمسارات مطلقة عند النشر) -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="اختبار الشلال — أي مهنة تناسبك؟">
+<meta property="og:description" content="أجب بصدق، فالشلال لا يُخدَع. اكتشف مهنتك: محارب، ساحر، كاهن، لص، تاجر، مقاتل، مهرّج… أم البطل النادر؟">
+<meta property="og:image" content="assets/bg-falls.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="اختبار الشلال — أي مهنة تناسبك؟">
+<meta name="twitter:image" content="assets/bg-falls.jpg">
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚔️</text></svg>">
+<link rel="apple-touch-icon" href="assets/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;800;900&family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --panel: rgba(7, 17, 24, .93);
+    --panel-solid: #0a1a24;
+    --gold: #e3c169;
+    --gold-dark: #a8853a;
+    --gold-bright: #ffd98f;
+    --text: #f3ecd9;
+    --dim: #a9b6a9;
+    --accent: #7fd4c1;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { min-height: 100%; }
+  body {
+    background: #08141c;
+    color: var(--text);
+    font-family: "Cairo", sans-serif;
+    overflow-x: hidden;
+    display: flex;
+    padding: 24px 16px;
+  }
+  /* طبقة الخلفية المرسومة (div ثابت بدل background-attachment: fixed
+     الذي يسبب مشاكل رسم في بعض المتصفحات) */
+  .bg {
+    position: fixed; inset: 0;
+    background: url("assets/bg-falls.jpg") center / cover no-repeat;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .bg::after {
+    content: "";
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, rgba(4,10,16,.25) 0%, rgba(4,10,16,.7) 100%);
+  }
+
+  /* ===== يراعات متطايرة (أجواء Legend of Mana) ===== */
+  .fireflies { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
+  .fireflies span {
+    position: absolute;
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #ffe9a8 0%, rgba(255,215,130,.5) 40%, transparent 70%);
+    animation: drift linear infinite, flicker ease-in-out infinite alternate;
+  }
+  @keyframes drift {
+    from { transform: translateY(20vh) translateX(0); }
+    to   { transform: translateY(-110vh) translateX(6vw); }
+  }
+  @keyframes flicker { from { opacity: .15; } to { opacity: .95; } }
+
+  /* ===== زر الصوت ===== */
+  .sound-btn {
+    position: fixed;
+    top: 14px;
+    left: 14px;
+    z-index: 10;
+    width: 44px;
+    height: 44px;
+    border: 2px solid var(--gold-dark);
+    border-radius: 10px;
+    background: var(--panel);
+    color: var(--text);
+    font-size: 19px;
+    cursor: pointer;
+    box-shadow: inset 0 0 0 1px rgba(255,220,150,.25);
+    transition: border-color .15s ease;
+  }
+  .sound-btn:hover { border-color: var(--gold); }
+
+  /* ===== اللوحة (بأسلوب قوائم PS1) ===== */
+  /* margin:auto توسيط آمن لا يقص أعلى المحتوى الطويل على الجوال */
+  .stage { width: min(720px, 100%); position: relative; z-index: 2; margin: auto; }
+
+  .dq-box {
+    position: relative;
+    background: linear-gradient(180deg, rgba(16,34,44,.95), var(--panel));
+    border: 3px solid var(--gold-dark);
+    border-radius: 6px;
+    box-shadow:
+      inset 0 0 0 2px rgba(0,0,0,.55),
+      inset 0 0 0 3px rgba(255,222,150,.35),
+      inset 0 0 60px rgba(0,0,0,.45),
+      0 24px 70px rgba(0, 0, 0, .75);
+    padding: 30px 28px;
+  }
+  /* زخارف الزوايا الذهبية */
+  .corner {
+    position: absolute;
+    width: 58px; height: 58px;
+    background: url("assets/corner.png") center / cover no-repeat;
+    pointer-events: none;
+    opacity: .95;
+  }
+  .c-tl { top: -8px; left: -8px; }
+  .c-tr { top: -8px; right: -8px; transform: scaleX(-1); }
+  .c-bl { bottom: -8px; left: -8px; transform: scaleY(-1); }
+  .c-br { bottom: -8px; right: -8px; transform: rotate(180deg); }
+
+  .screen { display: none; animation: appear .4s ease; }
+  .screen.active { display: block; }
+  @keyframes appear { from { opacity: 0; transform: translateY(12px); } }
+
+  /* ===== شاشة البداية ===== */
+  .title-en {
+    font-family: "Press Start 2P", monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--accent);
+    text-align: center;
+    margin-bottom: 16px;
+  }
+  h1 {
+    text-align: center;
+    font-weight: 900;
+    font-size: clamp(34px, 7vw, 54px);
+    color: var(--gold-bright);
+    text-shadow: 0 2px 0 #5d451a, 0 0 30px rgba(255,215,130,.25), 0 8px 24px rgba(0,0,0,.8);
+    margin-bottom: 6px;
+  }
+  .subtitle {
+    text-align: center;
+    color: var(--accent);
+    font-weight: 800;
+    font-size: 17px;
+    margin-bottom: 14px;
+  }
+  .intro-portrait {
+    display: block;
+    width: 264px;
+    height: 172px;
+    margin: 4px auto 18px;
+    object-fit: cover;
+    border: 3px solid var(--gold-dark);
+    border-radius: 6px;
+    box-shadow: inset 0 0 0 1px rgba(255,222,150,.4), 0 10px 30px rgba(0,0,0,.6), 0 0 34px rgba(127,212,193,.25);
+  }
+  .intro-text {
+    text-align: center;
+    color: var(--dim);
+    font-size: 16.5px;
+    line-height: 2;
+    margin-bottom: 24px;
+  }
+  .intro-text b { color: var(--text); }
+  .blink { animation: blink 1.1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* ===== الأزرار ===== */
+  .btn {
+    display: block;
+    width: 100%;
+    background: rgba(10, 24, 32, .85);
+    border: 2px solid var(--gold-dark);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: inherit;
+    font-weight: 800;
+    font-size: 16.5px;
+    padding: 13px 18px;
+    margin-top: 12px;
+    cursor: pointer;
+    text-align: right;
+    position: relative;
+    box-shadow: inset 0 0 0 1px rgba(255,222,150,.18);
+    transition: transform .08s ease, border-color .15s ease, background .15s ease;
+  }
+  .btn:hover, .btn:focus-visible {
+    background: rgba(26, 48, 58, .95);
+    border-color: var(--gold);
+    outline: none;
+    transform: translateX(-3px);
+  }
+  .btn:hover::before, .btn:focus-visible::before {
+    content: "◆";
+    position: absolute;
+    left: 16px;
+    color: var(--gold-bright);
+    font-size: 13px;
+  }
+  .btn .key {
+    position: absolute;
+    left: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: "Press Start 2P", monospace;
+    font-size: 8px;
+    color: var(--dim);
+    border: 1.5px solid rgba(169,182,169,.6);
+    border-radius: 4px;
+    padding: 3px 5px;
+    opacity: .6;
+  }
+  .btn-gold {
+    text-align: center;
+    background: linear-gradient(180deg, #f0d488, #c19a3f);
+    color: #33240a;
+    border-color: #f7e7b5;
+    text-shadow: 0 1px 0 rgba(255,255,255,.35);
+  }
+  .btn-gold:hover, .btn-gold:focus-visible {
+    background: linear-gradient(180deg, #ffe9a8, #d4ad4e);
+    transform: none;
+  }
+  .btn-gold:hover::before { content: ""; }
+  .btn-row { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn-row .btn { flex: 1 1 160px; text-align: center; }
+  .btn-row .btn:hover::before, .btn-row .btn:focus-visible::before { content: ""; }
+
+  /* ===== شاشة الأسئلة (حوار بأسلوب FFT) ===== */
+  .progress {
+    font-family: "Press Start 2P", monospace;
+    font-size: 10px;
+    color: var(--accent);
+    margin-bottom: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    direction: ltr;
+  }
+  .pips { display: flex; gap: 6px; }
+  .pip { width: 10px; height: 10px; border: 2px solid var(--gold-dark); border-radius: 2px; }
+  .pip.done { background: var(--gold); border-color: var(--gold); box-shadow: 0 0 6px rgba(255,215,130,.6); }
+
+  .dialog-row {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    margin-bottom: 10px;
+  }
+  .seer-box { flex: 0 0 auto; text-align: center; }
+  .seer-box img {
+    display: block;
+    width: 156px;
+    height: 102px;
+    object-fit: cover;
+    border: 3px solid var(--gold-dark);
+    border-radius: 6px;
+    box-shadow: inset 0 0 0 1px rgba(255,222,150,.4), 0 8px 22px rgba(0,0,0,.55), 0 0 26px rgba(127,212,193,.2);
+  }
+  .seer-name {
+    display: inline-block;
+    margin-top: -12px;
+    position: relative;
+    background: linear-gradient(180deg, #f0d488, #c19a3f);
+    color: #33240a;
+    font-size: 11.5px;
+    font-weight: 900;
+    padding: 2px 12px;
+    border-radius: 999px;
+    border: 1.5px solid #f7e7b5;
+    box-shadow: 0 3px 8px rgba(0,0,0,.5);
+  }
+  .question {
+    flex: 1;
+    min-height: 120px;
+    font-size: 18.5px;
+    font-weight: 800;
+    line-height: 2;
+    padding: 14px 16px;
+    background: rgba(4, 12, 18, .6);
+    border: 2px solid rgba(168,133,58,.55);
+    border-radius: 6px;
+    box-shadow: inset 0 0 0 1px rgba(255,222,150,.12);
+  }
+  .question .cursor { color: var(--gold-bright); }
+  .choices { visibility: hidden; }
+  .choices.show { visibility: visible; }
+
+  @media (max-width: 560px) {
+    body { padding: 16px 10px; }
+    .dq-box { padding: 24px 16px; }
+    .corner { width: 42px; height: 42px; }
+    .c-tl { top: -6px; left: -6px; }
+    .c-tr { top: -6px; right: -6px; }
+    .c-bl { bottom: -6px; left: -6px; }
+    .c-br { bottom: -6px; right: -6px; }
+    .sound-btn { width: 38px; height: 38px; font-size: 16px; top: 8px; left: 8px; }
+    .progress { padding-left: 40px; } /* إفساح مكان زر الصوت */
+    .dialog-row { gap: 10px; }
+    .seer-box img { width: 108px; height: 71px; }
+    .seer-name { font-size: 10px; padding: 2px 8px; }
+    .question { font-size: 16px; min-height: 100px; padding: 12px; }
+    .btn { font-size: 15.5px; padding: 12px 14px; }
+    .btn .key { display: none; }
+    .stat-row { grid-template-columns: 62px 1fr 40px; font-size: 13px; }
+  }
+
+  /* ===== شاشة النتيجة ===== */
+  .portrait {
+    display: none;
+    width: 290px;
+    height: 189px;
+    max-width: 100%;
+    margin: 0 auto 14px;
+    border: 3px solid var(--gold-dark);
+    border-radius: 6px;
+    box-shadow: inset 0 0 0 1px rgba(255,222,150,.45), 0 12px 34px rgba(0,0,0,.6), 0 0 40px rgba(255,215,130,.18);
+    object-fit: cover;
+  }
+  .portrait.show { display: block; animation: reveal .6s cubic-bezier(.2,.9,.3,1.4); }
+  .portrait.hero-glow { box-shadow: inset 0 0 0 1px rgba(255,222,150,.6), 0 12px 34px rgba(0,0,0,.6), 0 0 52px rgba(255,215,130,.55); border-color: var(--gold); }
+  @keyframes reveal { from { opacity: 0; transform: scale(.6); } }
+
+  .badge-rare {
+    display: none;
+    width: fit-content;
+    margin: 0 auto 10px;
+    padding: 4px 18px;
+    border: 2px solid var(--gold);
+    border-radius: 999px;
+    color: var(--gold-bright);
+    background: rgba(255,215,130,.08);
+    font-weight: 900;
+    font-size: 13px;
+    letter-spacing: 1px;
+    animation: blink 1.6s steps(1) infinite;
+  }
+  .badge-rare.show { display: block; }
+
+  .result-label { text-align: center; color: var(--dim); font-size: 15px; margin-bottom: 4px; }
+  .result-name {
+    text-align: center;
+    font-size: clamp(30px, 6vw, 46px);
+    font-weight: 900;
+    color: var(--gold-bright);
+    text-shadow: 0 2px 0 #5d451a, 0 0 26px rgba(255,215,130,.3);
+    line-height: 1.5;
+  }
+  .result-en {
+    text-align: center;
+    font-family: "Press Start 2P", monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--accent);
+    margin: 2px 0 12px;
+  }
+  .result-tag { text-align: center; font-size: 17px; font-weight: 800; color: var(--text); margin-bottom: 18px; line-height: 1.9; }
+
+  .why {
+    border: 2px solid rgba(168,133,58,.55);
+    border-radius: 6px;
+    padding: 16px 18px 14px;
+    margin-bottom: 20px;
+    background: rgba(4, 12, 18, .55);
+    box-shadow: inset 0 0 0 1px rgba(255,222,150,.12);
+  }
+  .why h3 { color: var(--accent); font-size: 15px; margin-bottom: 6px; }
+  .why p { font-size: 15.5px; line-height: 1.95; color: var(--text); margin-bottom: 12px; }
+  .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+  .chip {
+    font-size: 13px;
+    font-weight: 800;
+    padding: 4px 12px;
+    border-radius: 999px;
+    border: 2px solid var(--chip, var(--accent));
+    color: var(--chip, var(--accent));
+    background: rgba(0,0,0,.3);
+  }
+
+  .section-title { color: var(--accent); font-size: 15px; font-weight: 900; margin-bottom: 10px; }
+
+  .stats { margin-bottom: 22px; }
+  .stat-row {
+    display: grid;
+    grid-template-columns: 72px 1fr 46px;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 800;
+  }
+  .stat-row .pct { text-align: left; color: var(--dim); font-family: "Press Start 2P", monospace; font-size: 9px; direction: ltr; }
+  .stat-bar {
+    height: 14px;
+    border: 2px solid rgba(227,193,105,.5);
+    border-radius: 4px;
+    overflow: hidden;
+    background: rgba(0,0,0,.35);
+  }
+  .stat-fill {
+    height: 100%;
+    width: 0;
+    border-radius: 2px;
+    background-image: repeating-linear-gradient(90deg, rgba(0,0,0,.22) 0 3px, transparent 3px 10px);
+    transition: width .9s cubic-bezier(.2,.8,.2,1);
+  }
+
+  #shareCanvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 3px solid var(--gold-dark);
+    border-radius: 6px;
+    box-shadow: inset 0 0 0 1px rgba(255,222,150,.3);
+    margin-bottom: 16px;
+  }
+  .hint { text-align: center; color: var(--dim); font-size: 13px; margin-top: 14px; }
+  .credit { text-align: center; color: var(--dim); font-size: 12px; margin-top: 18px; opacity: .7; }
+</style>
+</head>
+<body>
+
+<div class="bg"></div>
+<div class="fireflies" id="fireflies"></div>
+<button class="sound-btn" id="soundBtn" onclick="toggleMute()" title="الصوت">🔊</button>
+
+<div class="stage">
+
+  <!-- شاشة البداية -->
+  <section class="screen active dq-box" id="screen-start">
+    <i class="corner c-tl"></i><i class="corner c-tr"></i><i class="corner c-bl"></i><i class="corner c-br"></i>
+    <div class="title-en">DRAGON QUEST INSPIRED</div>
+    <h1>اختبار الشلال</h1>
+    <p class="subtitle">أي مهنة مغامرة تناسبك؟</p>
+    <img class="intro-portrait" src="assets/port-seer.png" alt="عرّافة الشلال">
+    <p class="intro-text">
+      «اقترب أيها المسافر…<br>
+      اجلس عند الشلال وأجب بصدق، <b>فالماء لا يُخدَع</b>.<br>
+      محارب؟ ساحر؟ لص؟ … أم شيء أندر من ذلك؟»
+    </p>
+    <button class="btn btn-gold" onclick="startQuiz()">▶ ابدأ الاختبار</button>
+    <p class="hint blink">⩔ اضغط للبدء ⩔</p>
+    <p class="credit">مستوحى من اختبار الشخصية في Dragon Quest III</p>
+  </section>
+
+  <!-- شاشة الأسئلة -->
+  <section class="screen dq-box" id="screen-quiz">
+    <i class="corner c-tl"></i><i class="corner c-tr"></i><i class="corner c-bl"></i><i class="corner c-br"></i>
+    <div class="progress">
+      <span id="qNum">Q1</span>
+      <div class="pips" id="pips"></div>
+    </div>
+    <div class="dialog-row">
+      <div class="seer-box">
+        <img src="assets/port-seer.png" alt="عرّافة الشلال">
+        <span class="seer-name">عرّافة الشلال</span>
+      </div>
+      <div class="question" id="qText"></div>
+    </div>
+    <div class="choices" id="choices"></div>
+    <p class="hint">تلميح: تقدر تختار بأزرار الأرقام 1‑4</p>
+  </section>
+
+  <!-- شاشة النتيجة -->
+  <section class="screen dq-box" id="screen-result">
+    <i class="corner c-tl"></i><i class="corner c-tr"></i><i class="corner c-bl"></i><i class="corner c-br"></i>
+    <img class="portrait" id="rPortrait" alt="">
+    <div class="badge-rare" id="rBadge">★ نتيجة نادرة ★</div>
+    <p class="result-label">الشلال قرأ روحك… ومهنتك هي:</p>
+    <h2 class="result-name" id="rName"></h2>
+    <p class="result-en" id="rEn"></p>
+    <p class="result-tag" id="rTag"></p>
+
+    <div class="why">
+      <h3>لماذا تناسبك هذه المهنة؟</h3>
+      <p id="rWhy"></p>
+      <div class="chips" id="rStr"></div>
+    </div>
+
+    <p class="section-title">نسبة توافقك مع المهن:</p>
+    <div class="stats" id="stats"></div>
+
+    <canvas id="shareCanvas" width="1200" height="675"></canvas>
+    <div class="btn-row">
+      <button class="btn" id="btnNativeShare" onclick="nativeShare()" hidden>📤 شارك الصورة</button>
+      <button class="btn" onclick="shareTwitter()">𝕏 غرّد نتيجتك</button>
+      <button class="btn" onclick="downloadImage()">⬇ تحميل الصورة</button>
+    </div>
+    <button class="btn btn-gold" style="margin-top:14px" onclick="restart()">↻ أعد الاختبار</button>
+  </section>
+
+</div>
+
+<script>
+/* ================= المهن ================= */
+const CLASSES = {
+  warrior: { name: "المُحارِب", en: "WARRIOR", img: "assets/port-warrior.png", color: "#ff8a70",
+    tag: "سيفٌ لا ينحني، ودرعٌ يحتمي خلفه الجميع.",
+    why: "تختار المواجهة على المراوغة، وتتقدّم الصف حين يتراجع غيرك. الميدان المفتوح والقتال الشريف لغتك الأم، ورفاقك يعرفون أن ظهورهم محمية ما دمت واقفاً.",
+    strengths: ["ثبات تحت الضغط", "حماية الفريق", "حسم المواجهات"] },
+  fighter: { name: "المُقاتِل", en: "MARTIAL ARTIST", img: "assets/port-fighter.png", color: "#ffb765",
+    tag: "جسدك سلاحك، وغريزتك أسرع من أي خطة.",
+    why: "تثق بجسدك وتدريبك أكثر من أي أداة أو تعويذة. تندفع حيث يتردد غيرك، وتتكيف في منتصف الحركة، وتضرب في اللحظة الصحيحة بلا تفكير زائد.",
+    strengths: ["سرعة البديهة", "اعتماد على الذات", "طاقة لا تنفد"] },
+  mage: { name: "السـاحِر", en: "MAGE", img: "assets/port-mage.png", color: "#79c8ff",
+    tag: "من يفهم القواعد… يستطيع كسرها بأناقة.",
+    why: "تحلّل قبل أن تتحرك، وتبحث عن السبب خلف كل ظاهرة. بينما يرى الآخرون باباً مغلقاً، ترى أنت آليته ونقشه وثغرته. المعرفة عندك قوة تُبنى صفحةً بعد صفحة.",
+    strengths: ["تحليل عميق", "حلول غير تقليدية", "تخطيط بعيد المدى"] },
+  priest: { name: "الكـاهِنة", en: "PRIEST", img: "assets/port-priest.png", color: "#ffdf8a",
+    tag: "يدٌ تُداوي، وقلبٌ يتسع للجميع.",
+    why: "قوة الفريق الحقيقية تمرّ من خلالك: تلملم الجراح والخواطر، وتتذكّر من نسيهم الجميع، وتذكّر رفاقك لماذا يقاتلون أصلاً. الرحمة عندك ليست ضعفاً بل أعظم أنواع الشجاعة.",
+    strengths: ["تعاطف صادق", "دعم لا يتزعزع", "ضمير الفريق"] },
+  thief: { name: "اللِّص", en: "THIEF", img: "assets/port-thief.png", color: "#cf9dff",
+    tag: "ما من قفلٍ يصمد، وما من ظلٍ لا يسعك.",
+    why: "ترى الطرق الجانبية التي لا يراها أحد، وتحلّ بالمهارة والخفة ما يحلّه غيرك بالقوة الغاشمة. تلاحظ التفاصيل الصغيرة، وتتحرك قبل أن يكتمل السؤال في رؤوس الآخرين.",
+    strengths: ["مرونة وخفة", "ملاحظة التفاصيل", "حلول ملتوية ذكية"] },
+  merchant: { name: "التـاجِر", en: "MERCHANT", img: "assets/port-merchant.png", color: "#8ceeb2",
+    tag: "كل مأزق صفقة… ولكل صفقة ثمنها العادل.",
+    why: "تعرف قيمة كل شيء: الوقت والجهد والذهب والكلمة. تتفاوض حيث يتشاجر الآخرون، وتخرج من الغرفة والجميع رابح — وأنت رابح أكثر قليلاً. الموارد بين يديك لا تنفد، بل تتضاعف.",
+    strengths: ["تفاوض محترف", "إدارة الموارد", "اقتناص الفرص"] },
+  jester: { name: "المُهرِّج", en: "JESTER", img: "assets/port-jester.png", color: "#ff9de0",
+    tag: "الضحكة سلاح… ومن قال إن إنقاذ العالم يجب أن يكون كئيباً؟",
+    why: "تكسر التوتر بنكتة، وتقلب أسوأ المواقف مسرحاً. لا أحد يتوقع خطوتك التالية — وأحياناً حتى أنت لا تتوقعها — وهذا بالضبط ما يجعل الخصوم يرتبكون والرفاق يبتسمون.",
+    strengths: ["كاريزما جارفة", "إبداع فوضوي", "رفع معنويات الفريق"] },
+  hero: { name: "البَطَل", en: "HERO ★", img: "assets/port-hero.png", color: "#fff0b0",
+    tag: "روحٌ متوازنة نادرة… القدر نفسه ينتظر أمثالك.",
+    why: "لم تمِل لطرف واحد: فيك شيء من شجاعة المحارب، وحكمة الساحر، ورحمة الكاهنة، ودهاء اللص معاً. هذا التوازن النادر بالذات هو ما تُنسَج منه الأساطير — قلة عبر التاريخ حصلوا على هذه النتيجة.",
+    strengths: ["توازن نادر", "قيادة فطرية", "قدر استثنائي"] },
+};
+
+/* ================= بنك الأسئلة (20 سؤالاً — تُسحب 10 عشوائياً) =================
+   كل خيار: [النص, مهنة أساسية (+2), مهنة ثانوية (+1)] */
+const QUESTION_BANK = [
+  { q: "وحشٌ ضخم يسدّ الطريق الوحيد إلى القرية…",
+    c: [ ["أشهر سيفي وأواجهه وجهاً لوجه", "warrior", "fighter"],
+         ["أشتبك معه بيديّ العاريتين… جسدي سلاحي", "fighter", "warrior"],
+         ["أراقب حركته وأبحث عن نقطة ضعفه", "mage", "thief"],
+         ["أتسلل من خلفه وأفتح الطريق بصمت", "thief", "mage"] ] },
+  { q: "وجدت كيساً من الذهب ملقىً في الطريق…",
+    c: [ ["أعلّقه في ساحة القرية مع إعلانٍ طريف عن صاحبه", "jester", "priest"],
+         ["أسلّمه لكاهن المعبد ليجد صاحبه", "priest", "warrior"],
+         ["أحفظه وديعة وأستثمر جزءه حتى يظهر صاحبه", "merchant", "thief"],
+         ["أتركه وأراقب من الظل من سيعود باحثاً عنه", "thief", "mage"] ] },
+  { q: "رفيقك جُرح في منتصف مهمة خطيرة…",
+    c: [ ["أحمله على ظهري وأشق الطريق عائداً", "warrior", "fighter"],
+         ["أضمّد جرحه وأبقى ساهراً عليه", "priest", "warrior"],
+         ["أضحّكه لينسى الألم ريثما نصل", "jester", "priest"],
+         ["أرسم أقصر طريق آمن وأحسب كل خطوة", "mage", "merchant"] ] },
+  { q: "بابٌ غامض كُتب عليه: «لا تفتحه أبداً»…",
+    c: [ ["أفتحه فوراً… وما الحياة بلا مفاجآت؟", "jester", "fighter"],
+         ["أفحص القفل والنقوش قبل أي خطوة", "mage", "thief"],
+         ["أفتحه بعد أن أؤمّن مخرج هروب", "thief", "merchant"],
+         ["أحترم التحذير وأكمل طريقي", "priest", "warrior"] ] },
+  { q: "ملكٌ ظالم يعرض عليك جائزة كبيرة مقابل خدمة…",
+    c: [ ["أرفض في وجهه أمام حاشيته", "warrior", "fighter"],
+         ["أساوم على شروط تخفف الظلم عن الناس", "merchant", "priest"],
+         ["أقبل ظاهرياً… ولخطتي بقية", "thief", "mage"],
+         ["أسخر من عرضه بنكتة تجعله أضحوكة البلاط", "jester", "warrior"] ] },
+  { q: "وصلتك خريطة كنزٍ غامضة وطريقها وعر…",
+    c: [ ["أشد الرحال فجراً قبل أن يسبقني أحد", "fighter", "thief"],
+         ["أقارن رموزها بمخطوطات المكتبة أولاً", "mage", "priest"],
+         ["أجهّز حملة وأقسّم الحصص قبل الانطلاق", "merchant", "warrior"],
+         ["أعلن في الحانة أني سأعود أسطورة", "jester", "fighter"] ] },
+  { q: "طفل يبكي لأن قطته عالقة فوق شجرة عالية…",
+    c: [ ["أتسلق إليها بخفة وأعيدها لحضنه", "thief", "fighter"],
+         ["أمسح دموعه أولاً… ثم نحلّها معاً", "priest", "jester"],
+         ["أقلّد مواء أمها لأغريها بالنزول", "jester", "thief"],
+         ["أبتكر رافعة سريعة من حبل وسلة", "mage", "merchant"] ] },
+  { q: "في ليلة عاصفة قبل النوم… بمَ تفكر؟",
+    c: [ ["بتمرين الفجر… العاصفة لن تعفيني منه", "fighter", "warrior"],
+         ["بتعويذة عصيّة لم أروّضها بعد", "mage", "thief"],
+         ["بمن لا مأوى له في مثل هذه الليلة", "priest", "warrior"],
+         ["بأسعار الحبوب بعد أن تُغرق العاصفة المحاصيل", "merchant", "mage"] ] },
+  { q: "سيف أسطوري مغروس في صخرة، والجميع فشل في سحبه…",
+    c: [ ["أشدّه بكل عضلة في جسدي ولو انفتق ذراعي", "fighter", "warrior"],
+         ["أفكّ شيفرة النقوش المحفورة حوله", "mage", "thief"],
+         ["أنظّم مسابقة سحبٍ برسوم دخول", "merchant", "jester"],
+         ["أنحني له احتراماً… ليس كل سيفٍ قدري", "priest", "warrior"] ] },
+  { q: "سقط سلاح خصمك في منتصف النزال…",
+    c: [ ["أتراجع خطوة وأنتظره يلتقطه", "warrior", "priest"],
+         ["أرمي سلاحي أنا أيضاً: لنكمل بالأيدي!", "fighter", "jester"],
+         ["أعرض عليه تسويةً تحفظ ماء وجهه", "merchant", "priest"],
+         ["أعلنها للجمهور: «انتهى العرض بسلام!»", "jester", "merchant"] ] },
+  { q: "تنينٌ نائم فوق جبلٍ من الذهب…",
+    c: [ ["أوقظه بنفسي… لا مجد يُسرق من نائم", "warrior", "fighter"],
+         ["أنسلّ بين مخالبه وآخذ حاجتي فقط", "thief", "jester"],
+         ["أقدّر الحمولة وأخطط لقافلة تنقلها لاحقاً", "merchant", "mage"],
+         ["أدرس دورة نومه من بعيد وأدوّن كل شيء", "mage", "priest"] ] },
+  { q: "قرويّ فقير يعرض كل مدخراته مقابل حمايتك…",
+    c: [ ["أحميه ولا آخذ منه فلساً", "warrior", "priest"],
+         ["أدرّبه شهراً ليحمي نفسه بنفسه", "fighter", "mage"],
+         ["آخذ عربوناً يحفظ كرامته وأردّ الباقي سراً", "merchant", "priest"],
+         ["أحرس بيته من الظل دون أن يعلم أحد", "thief", "warrior"] ] },
+  { q: "جسر خشبي متهالك فوق وادٍ سحيق…",
+    c: [ ["أعبر أولاً ليطمئن من خلفي", "warrior", "priest"],
+         ["أجتازه ركضاً بخطواتٍ لا تكاد تلمس الخشب", "thief", "fighter"],
+         ["أفحص العوارض وأحسب وزن كل عابر", "mage", "merchant"],
+         ["أعبره وأنا أغني بأعلى صوتي لأطرد الرهبة", "jester", "fighter"] ] },
+  { q: "مُنحت قوة سحرية تُستخدم مرة واحدة فقط…",
+    c: [ ["أدّخرها للضربة التي ستحسم أعظم نزالاتي", "fighter", "warrior"],
+         ["أشفي بها كل مرضى الوادي دفعةً واحدة", "priest", "mage"],
+         ["أفتح بها القفل الذي عجز عنه لصوص التاريخ", "thief", "jester"],
+         ["أستثمرها فيما يدرّ خيراً يدوم سنين", "merchant", "priest"] ] },
+  { q: "عواءٌ يقترب من مخيّمكم ليلاً…",
+    c: [ ["أقف بين الصوت ورفاقي شاهراً درعي", "warrior", "priest"],
+         ["أطفئ النار وأمحو آثارنا بصمت", "thief", "mage"],
+         ["أتلو تعويذة كشفٍ لأعرف ما يتربص بنا", "mage", "priest"],
+         ["أرفع صوت العزف… لعل الذئاب تحب الطرب", "jester", "fighter"] ] },
+  { q: "رسالة استغاثة قديمة داخل زجاجة على الشاطئ…",
+    c: [ ["أستأجر قارباً وأبحر مع أول ضوء", "warrior", "fighter"],
+         ["أجهّز حملة إنقاذ كاملة العتاد", "priest", "merchant"],
+         ["أحدد موقعها من التيارات وخرائط النجوم", "mage", "thief"],
+         ["أقنع تجّار الميناء بتمويل سفينة إنقاذ", "merchant", "jester"] ] },
+  { q: "وليمة نصرٍ كبيرة في القرية…",
+    c: [ ["أعيد تمثيل المعركة للضيوف بالمؤثرات الكاملة", "jester", "fighter"],
+         ["أطمئن على الجرحى قبل أن ألمس صحني", "priest", "warrior"],
+         ["أراجع في رأسي ما كان يمكن فعله أفضل", "mage", "merchant"],
+         ["أتحدى الجميع في مصارعة الأذرع", "fighter", "jester"] ] },
+  { q: "حان تقسيم الغنيمة بين أفراد الفريق…",
+    c: [ ["بالتساوي… فالجرح واحد والمجد واحد", "warrior", "priest"],
+         ["حسب جهد كل فرد، وعندي الحسابات موثّقة", "merchant", "mage"],
+         ["آخذ القطعة الغامضة التي لا يريدها أحد", "mage", "thief"],
+         ["أتنازل عن حصتي مقابل أن تُروى القصة باسمي", "jester", "warrior"] ] },
+  { q: "مدينة جديدة… إلى أين تتجه أولاً؟",
+    c: [ ["ساحة التدريب لأقيس مستوى مقاتليها", "fighter", "warrior"],
+         ["المكتبة القديمة ومخطوطاتها المنسية", "mage", "priest"],
+         ["السوق… فالأسعار تفضح أسرار المدينة", "merchant", "thief"],
+         ["الأزقة الخلفية حيث الحكايات الحقيقية", "thief", "jester"] ] },
+  { q: "بعد مئة عام… كيف تحب أن يذكرك الناس؟",
+    c: [ ["«الدرع الذي لم ينحنِ»", "warrior", "fighter"],
+         ["«اليد التي داوت الجميع»", "priest", "mage"],
+         ["«الظل الذي لم يُمسكه أحد»", "thief", "merchant"],
+         ["«الضحكة التي أنقذت أحلك الليالي»", "jester", "priest"] ] },
+  { q: "مهرجان القرية السنوي… ماذا تقدّم فيه؟",
+    c: [ ["عرض مبارزة استعراضي يحبس الأنفاس", "warrior", "jester"],
+         ["خيمة قراءة الطالع بحركة النجوم", "mage", "priest"],
+         ["مسرحية هزلية عن الملك وحاشيته", "jester", "thief"],
+         ["بسطة «صفقات لا تُفوَّت» عند البوابة", "merchant", "jester"] ] },
+  { q: "جروٌ ضائع يرتجف تحت المطر…",
+    c: [ ["أحتضنه فوراً… صار خامس أفراد الفريق", "priest", "jester"],
+         ["أتتبع آثاره في الطين لأردّه إلى بيته", "thief", "mage"],
+         ["أدرّبه ليصير رفيق حراسةٍ لا يُشق له غبار", "fighter", "warrior"],
+         ["أعلن عنه في السوق… ومكافأة الإيجاد حلال", "merchant", "jester"] ] },
+  { q: "كتاب تعاويذ محرّم في مكتبة مهجورة…",
+    c: [ ["أحرقه… بعض المعرفة لعنة", "warrior", "priest"],
+         ["أدرسه سراً وبحذر شديد", "mage", "thief"],
+         ["أسلّمه للمعبد ليقرروا مصيره", "priest", "warrior"],
+         ["أعرف جامعاً غريب الأطوار يدفع فيه ثروة", "merchant", "thief"] ] },
+  { q: "عاصفة حطّمت جسر القرية الوحيد…",
+    c: [ ["أحمل الأخشاب وأعمل مع الرجال حتى الفجر", "fighter", "warrior"],
+         ["أرسم تصميماً أمتن للجسر الجديد", "mage", "merchant"],
+         ["أنظّم التبرعات وأوزّع المهام", "merchant", "priest"],
+         ["أرفّه عن المنكوبين حتى ينتهي البناء", "jester", "priest"] ] },
+  { q: "غريمك القديم يطرق بابك طالباً المساعدة…",
+    c: [ ["أساعده… الماضي خلفنا", "priest", "warrior"],
+         ["أساعده مقابل خدمةٍ يوم أحتاجها", "merchant", "thief"],
+         ["أساعده وأراقب ظهري طوال الطريق", "thief", "mage"],
+         ["أقبل فوراً… وأتحداه بعدها لنزالٍ ودّي", "fighter", "jester"] ] },
+  { q: "نوبة حراسة طويلة في ليلة هادئة…",
+    c: [ ["أتمرّن على السيف حتى مطلع الفجر", "warrior", "fighter"],
+         ["أراجع خرائطي وأعيد رسم الخطط", "mage", "merchant"],
+         ["أنحت ناياً وأعزف لحناً خافتاً", "jester", "priest"],
+         ["أراهن رفيقي: من يرصد أول نجمٍ ساقط؟", "thief", "jester"] ] },
+  { q: "عملاق جريح ممدد على الطريق…",
+    c: [ ["أضمّد جراحه غير عابئ بالخطر", "priest", "warrior"],
+         ["أراقب من بعيد… قد تكون خدعة", "thief", "mage"],
+         ["أسأله عن قصته أولاً، فالعمالقة لا يُجرحون عبثاً", "mage", "jester"],
+         ["أحرسه حتى يتعافى… وحليفٌ عملاق لا يُقدَّر بذهب", "merchant", "warrior"] ] },
+  { q: "صندوق مقفل وسط حطام سفينة على الشاطئ…",
+    c: [ ["أكسره بضربة واحدة وأرى ما فيه", "fighter", "warrior"],
+         ["أفتح قفله بمهارة دون خدش", "thief", "mage"],
+         ["أبحث عن مالكه في سجلات الميناء", "priest", "merchant"],
+         ["أبيعه مقفلاً كما هو… الغموض يرفع السعر", "merchant", "jester"] ] },
+  { q: "تلميذ صغير يتوسل أن تعلّمه…",
+    c: [ ["أعلّمه القتال ليدافع عن نفسه", "fighter", "warrior"],
+         ["أعلّمه القراءة قبل أن يمسك سيفاً", "mage", "priest"],
+         ["أعلّمه ألا يثق بسهولة… درس الشارع الأول", "thief", "merchant"],
+         ["أعلّمه أن يضحك مهما جرى", "jester", "priest"] ] },
+  { q: "النهاية المثالية لرحلتك الطويلة…",
+    c: [ ["نصب تذكاري في ساحة العاصمة", "warrior", "jester"],
+         ["برج معرفةٍ يقصده طلاب العلم من كل مكان", "mage", "priest"],
+         ["ثروة أسطورية وسمعة تسبقك إلى كل ميناء", "merchant", "thief"],
+         ["حانة دافئة مليئة بالأصدقاء والقصص", "jester", "priest"] ] },
+];
+
+const QUIZ_LENGTH = 10;
+const BASE_CLASSES = ["warrior","fighter","mage","priest","thief","merchant","jester"];
+
+/* ================= الصوت (WebAudio — بدون ملفات) ================= */
+let AC = null;
+let muted = localStorage.getItem("wf_muted") === "1";
+
+function ac() {
+  if (!AC) AC = new (window.AudioContext || window.webkitAudioContext)();
+  if (AC.state === "suspended") AC.resume();
+  return AC;
+}
+function tone(freq, delay, dur, type = "square", vol = .05) {
+  if (muted) return;
+  try {
+    const c = ac(), o = c.createOscillator(), g = c.createGain();
+    o.type = type; o.frequency.value = freq;
+    const t0 = c.currentTime + delay;
+    g.gain.setValueAtTime(vol, t0);
+    g.gain.exponentialRampToValueAtTime(.0001, t0 + dur);
+    o.connect(g); g.connect(c.destination);
+    o.start(t0); o.stop(t0 + dur + .02);
+  } catch (e) { /* الصوت غير متاح */ }
+}
+const sfx = {
+  tick:   () => tone(1050 + Math.random() * 250, 0, .018, "square", .012),
+  select: () => { tone(660, 0, .06); tone(990, .06, .08); },
+  start:  () => { tone(523, 0, .09); tone(659, .09, .09); tone(784, .18, .14); },
+  result: () => [392, 523, 659, 784, 1047].forEach((f, i) => tone(f, i * .11, .3, "triangle", .06)),
+  rare:   () => [523, 659, 784, 1047, 1319, 1568].forEach((f, i) => tone(f, i * .13, .4, "triangle", .07)),
+};
+function toggleMute() {
+  muted = !muted;
+  localStorage.setItem("wf_muted", muted ? "1" : "0");
+  document.getElementById("soundBtn").textContent = muted ? "🔇" : "🔊";
+  if (!muted) sfx.select();
+}
+document.getElementById("soundBtn").textContent = muted ? "🔇" : "🔊";
+
+/* ================= منطق الاختبار ================= */
+let questions = [];
+let current = 0;
+let scores = {};
+let typeTimer = null;
+let finalResult = null;
+let tickCount = 0;
+
+const $ = id => document.getElementById(id);
+
+function show(id) {
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  $(id).classList.add("active");
+}
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function startQuiz() {
+  sfx.start();
+  questions = shuffle(QUESTION_BANK).slice(0, QUIZ_LENGTH)
+    .map(item => ({ q: item.q, c: shuffle(item.c) }));
+  current = 0;
+  scores = Object.fromEntries(BASE_CLASSES.map(k => [k, 0]));
+  buildPips();
+  show("screen-quiz");
+  renderQuestion();
+}
+
+function buildPips() {
+  $("pips").innerHTML = questions.map(() => '<div class="pip"></div>').join("");
+}
+
+function renderQuestion() {
+  const item = questions[current];
+  $("qNum").textContent = "Q" + (current + 1) + "/" + questions.length;
+  document.querySelectorAll(".pip").forEach((p, i) => p.classList.toggle("done", i < current));
+
+  const box = $("choices");
+  box.classList.remove("show");
+  box.innerHTML = "";
+  item.c.forEach(([txt, primary, secondary], idx) => {
+    const b = document.createElement("button");
+    b.className = "btn";
+    b.innerHTML = txt + '<span class="key">' + (idx + 1) + "</span>";
+    b.onclick = () => answer(primary, secondary);
+    box.appendChild(b);
+  });
+
+  typewriter(item.q, () => box.classList.add("show"));
+}
+
+function typewriter(text, done) {
+  clearInterval(typeTimer);
+  const el = $("qText");
+  let i = 0;
+  el.innerHTML = '<span class="cursor">▶ </span>';
+  const span = document.createElement("span");
+  el.appendChild(span);
+  typeTimer = setInterval(() => {
+    span.textContent = text.slice(0, ++i);
+    if (++tickCount % 2 === 0) sfx.tick();
+    if (i >= text.length) { clearInterval(typeTimer); done(); }
+  }, 28);
+  // ضغطة تُظهر النص كاملاً فوراً
+  el.onclick = () => { clearInterval(typeTimer); span.textContent = text; done(); };
+}
+
+function answer(primary, secondary) {
+  sfx.select();
+  scores[primary] += 2;
+  if (secondary) scores[secondary] += 1;
+  current++;
+  if (current < questions.length) renderQuestion();
+  else finish();
+}
+
+// اختصارات لوحة المفاتيح
+document.addEventListener("keydown", e => {
+  if ($("screen-start").classList.contains("active") && (e.key === "Enter" || e.key === " ")) {
+    e.preventDefault();
+    return startQuiz();
+  }
+  if ($("screen-quiz").classList.contains("active") && $("choices").classList.contains("show")) {
+    const n = parseInt(e.key, 10);
+    if (n >= 1 && n <= 4) {
+      const btn = $("choices").children[n - 1];
+      if (btn) btn.click();
+    }
+  }
+});
+
+/* ================= حساب النتيجة ================= */
+function computeResult() {
+  const sorted = BASE_CLASSES.slice().sort((a, b) => scores[b] - scores[a]);
+  const total = Object.values(scores).reduce((a, b) => a + b, 0) || 1;
+  const pct = {};
+  for (const k of BASE_CLASSES) pct[k] = Math.round(scores[k] / total * 100);
+
+  // «البطل»: نتيجة نادرة لمن كانت أعلى أربع مهنه متقاربة جداً (روح متوازنة)
+  const isHero = scores[sorted[0]] > 0 && (scores[sorted[0]] - scores[sorted[3]]) <= 2;
+  const key = isHero ? "hero" : sorted[0];
+  return { key, cls: CLASSES[key], isHero, sorted, pct };
+}
+
+const IMG_CACHE = {};
+function loadImg(src) {
+  return new Promise(res => {
+    if (src in IMG_CACHE) return res(IMG_CACHE[src]);
+    const im = new Image();
+    im.onload = () => { IMG_CACHE[src] = im; res(im); };
+    im.onerror = () => { IMG_CACHE[src] = null; res(null); };
+    im.src = src;
+  });
+}
+
+async function finish() {
+  finalResult = computeResult();
+  const c = finalResult.cls;
+
+  $("rName").textContent = c.name;
+  $("rEn").textContent = c.en;
+  $("rTag").textContent = c.tag;
+  $("rWhy").textContent = c.why;
+  $("rBadge").classList.toggle("show", finalResult.isHero);
+  $("rStr").innerHTML = c.strengths
+    .map(s => `<span class="chip" style="--chip:${c.color}">${s}</span>`).join("");
+
+  const [portrait, bg, corner] = await Promise.all([
+    loadImg(c.img), loadImg("assets/bg-falls.jpg"), loadImg("assets/corner.png"),
+  ]);
+  const pEl = $("rPortrait");
+  if (portrait) {
+    pEl.src = portrait.src;
+    pEl.classList.add("show");
+    pEl.classList.toggle("hero-glow", finalResult.isHero);
+  } else pEl.classList.remove("show");
+
+  renderStats(finalResult);
+  renderCardTo($("shareCanvas"), finalResult, portrait, bg, corner);
+  if (navigator.canShare) $("btnNativeShare").hidden = false;
+  show("screen-result");
+  (finalResult.isHero ? sfx.rare : sfx.result)();
+}
+
+function renderStats(r) {
+  const box = $("stats");
+  box.innerHTML = "";
+  r.sorted.forEach(k => {
+    const t = CLASSES[k];
+    const row = document.createElement("div");
+    row.className = "stat-row";
+    row.innerHTML =
+      `<span>${t.name}</span>` +
+      `<div class="stat-bar"><div class="stat-fill" style="background-color:${t.color}"></div></div>` +
+      `<span class="pct">${r.pct[k]}%</span>`;
+    box.appendChild(row);
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => {
+        row.querySelector(".stat-fill").style.width = r.pct[k] + "%";
+      })
+    );
+  });
+}
+
+function restart() { sfx.select(); show("screen-start"); }
+
+/* ================= بطاقة المشاركة (Canvas) ================= */
+function renderCardTo(cv, r, portrait, bg, corner) {
+  const ctx = cv.getContext("2d");
+  const W = cv.width, H = cv.height;
+  const c = r.cls;
+  const cx = portrait ? (W - 320) / 2 : W / 2;
+  const textMaxW = portrait ? 560 : W - 240;
+
+  // الخلفية: مشهد الشلال المرسوم مع تعتيم
+  if (bg) {
+    const s = Math.max(W / bg.width, H / bg.height);
+    const bw = bg.width * s, bh = bg.height * s;
+    ctx.drawImage(bg, (W - bw) / 2, (H - bh) / 2, bw, bh);
+    ctx.fillStyle = "rgba(4, 11, 17, .8)";
+    ctx.fillRect(0, 0, W, H);
+  } else {
+    const g = ctx.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, "#071219");
+    g.addColorStop(1, "#0c2230");
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, W, H);
+  }
+
+  // إطار ذهبي مزدوج
+  ctx.strokeStyle = "#a8853a";
+  ctx.lineWidth = 8;
+  roundRect(ctx, 22, 22, W - 44, H - 44, 14); ctx.stroke();
+  ctx.strokeStyle = "rgba(255, 222, 150, .75)";
+  ctx.lineWidth = 2;
+  roundRect(ctx, 36, 36, W - 72, H - 72, 10); ctx.stroke();
+
+  // زخارف الزوايا (خلفيتها شفافة)
+  if (corner) {
+    const cs = 110;
+    ctx.save();
+    ctx.drawImage(corner, 26, 26, cs, cs);
+    ctx.save(); ctx.translate(W - 26, 26); ctx.scale(-1, 1); ctx.drawImage(corner, 0, 0, cs, cs); ctx.restore();
+    ctx.save(); ctx.translate(26, H - 26); ctx.scale(1, -1); ctx.drawImage(corner, 0, 0, cs, cs); ctx.restore();
+    ctx.save(); ctx.translate(W - 26, H - 26); ctx.scale(-1, -1); ctx.drawImage(corner, 0, 0, cs, cs); ctx.restore();
+    ctx.restore();
+  }
+
+  ctx.textAlign = "center";
+  ctx.direction = "rtl";
+
+  // بورتريه المهنة (عرضي 3:2) على يمين البطاقة
+  if (portrait) {
+    const pw = 310, ph = 203;
+    const px = W - 370, py = 122;
+    ctx.save();
+    roundRect(ctx, px, py, pw, ph, 8);
+    ctx.clip();
+    // قصّ يملأ الإطار من صورة قد لا تطابق النسبة
+    const s = Math.max(pw / portrait.width, ph / portrait.height);
+    const iw = portrait.width * s, ih = portrait.height * s;
+    ctx.drawImage(portrait, px + (pw - iw) / 2, py + (ph - ih) / 2, iw, ih);
+    ctx.restore();
+    ctx.strokeStyle = r.isHero ? "#ffd98f" : "#a8853a";
+    ctx.lineWidth = 5;
+    roundRect(ctx, px, py, pw, ph, 8); ctx.stroke();
+    ctx.strokeStyle = "rgba(255,222,150,.55)";
+    ctx.lineWidth = 1.5;
+    roundRect(ctx, px + 6, py + 6, pw - 12, ph - 12, 5); ctx.stroke();
+  }
+
+  // العنوان
+  ctx.fillStyle = "#7fd4c1";
+  ctx.font = "700 27px Cairo, sans-serif";
+  ctx.fillText("⛲ اختبار الشلال — أي مهنة تناسبك؟ ⛲", cx, 96);
+
+  // «مهنتك»
+  ctx.fillStyle = "#a9b6a9";
+  ctx.font = "700 25px Cairo, sans-serif";
+  ctx.fillText(r.isHero ? "★ نتيجة نادرة… مهنتك ★" : "مهنتك المقدَّرة:", cx, 150);
+
+  // اسم المهنة
+  let size = 82;
+  ctx.font = `900 ${size}px Cairo, sans-serif`;
+  while (ctx.measureText(c.name).width > textMaxW && size > 40) {
+    size -= 4;
+    ctx.font = `900 ${size}px Cairo, sans-serif`;
+  }
+  ctx.fillStyle = r.isHero ? "#fff0b0" : "#ffd98f";
+  ctx.shadowColor = "rgba(0,0,0,.7)";
+  ctx.shadowOffsetY = 5;
+  ctx.fillText(c.name, cx, 238);
+  ctx.shadowColor = "transparent";
+  ctx.shadowOffsetY = 0;
+
+  // الاسم الإنجليزي
+  ctx.fillStyle = "#7fd4c1";
+  ctx.font = "19px 'Press Start 2P', monospace";
+  ctx.fillText(c.en, cx, 282);
+
+  // الوصف القصير
+  ctx.fillStyle = "#f3ecd9";
+  ctx.font = "600 28px Cairo, sans-serif";
+  wrapText(ctx, c.tag, cx, 340, textMaxW, 45);
+
+  // أعلى 3 مهن — أشرطة
+  const top3 = r.sorted.slice(0, 3);
+  const barY0 = 452, rowH = 48;
+  const barRight = W - 330, barW = 540, barH = 22;
+  top3.forEach((k, i) => {
+    const t = CLASSES[k];
+    const y = barY0 + i * rowH;
+
+    ctx.textAlign = "right";
+    ctx.fillStyle = "#f3ecd9";
+    ctx.font = "800 25px Cairo, sans-serif";
+    ctx.fillText(t.name, W - 170, y + barH - 4);
+
+    ctx.fillStyle = "rgba(0,0,0,.4)";
+    roundRect(ctx, barRight - barW, y, barW, barH, 5); ctx.fill();
+    const fw = Math.max(10, barW * r.pct[k] / 100);
+    ctx.fillStyle = t.color;
+    roundRect(ctx, barRight - fw, y, fw, barH, 5); ctx.fill();
+    ctx.strokeStyle = "rgba(227,193,105,.65)";
+    ctx.lineWidth = 2;
+    roundRect(ctx, barRight - barW, y, barW, barH, 5); ctx.stroke();
+
+    ctx.textAlign = "left";
+    ctx.fillStyle = "#a9b6a9";
+    ctx.font = "700 21px 'Press Start 2P', Cairo, monospace";
+    ctx.fillText(r.pct[k] + "%", 175, y + barH - 3);
+  });
+  ctx.textAlign = "center";
+
+  // التذييل
+  ctx.fillStyle = "#a9b6a9";
+  ctx.font = "700 22px Cairo, sans-serif";
+  ctx.fillText("جرّب الاختبار بنفسك — همس الشلال ينتظرك", W / 2, H - 46);
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+
+function wrapText(ctx, text, x, y, maxW, lineH) {
+  const words = text.split(" ");
+  let line = "";
+  for (const w of words) {
+    const test = line ? line + " " + w : w;
+    if (ctx.measureText(test).width > maxW && line) {
+      ctx.fillText(line, x, y);
+      line = w;
+      y += lineH;
+    } else line = test;
+  }
+  if (line) ctx.fillText(line, x, y);
+}
+
+/* ================= المشاركة ================= */
+// عند فتح الملف محلياً (file://) قد يمنع المتصفح تصدير كانفس رُسمت عليه صور،
+// فنعيد الرسم على كانفس مؤقتة بدون الصور كخطة بديلة.
+function exportCanvas() {
+  const cv = $("shareCanvas");
+  try {
+    return cv.toDataURL("image/png") && cv;
+  } catch (e) {
+    const tmp = document.createElement("canvas");
+    tmp.width = cv.width; tmp.height = cv.height;
+    renderCardTo(tmp, finalResult, null, null, null);
+    return tmp;
+  }
+}
+
+async function downloadImage() {
+  // Blob URL أضمن من data URL على iOS Safari وللصور الكبيرة
+  const blob = await new Promise(res => exportCanvas().toBlob(res, "image/png"));
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.download = "مهنتي-اختبار-الشلال.png";
+  a.href = url;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 5000);
+}
+
+function shareTwitter() {
+  const c = finalResult.cls;
+  const rare = finalResult.isHero ? "★ نتيجة نادرة ★\n" : "";
+  const text = `⛲ اختبار الشلال حدد مهنتي: «${c.name}» (${c.en})\n${rare}${c.tag}\n\nوأنت… أي مهنة تناسبك؟ 👇`;
+  const url = location.origin.startsWith("http") ? location.href : "";
+  window.open(
+    "https://twitter.com/intent/tweet?text=" + encodeURIComponent(text) +
+    (url ? "&url=" + encodeURIComponent(url) : ""),
+    "_blank"
+  );
+}
+
+async function nativeShare() {
+  try {
+    const blob = await new Promise(res => exportCanvas().toBlob(res, "image/png"));
+    const file = new File([blob], "waterfall-class.png", { type: "image/png" });
+    if (navigator.canShare({ files: [file] })) {
+      await navigator.share({ files: [file], title: "اختبار الشلال", text: `مهنتي: ${finalResult.cls.name}` });
+    } else {
+      await navigator.share({ title: "اختبار الشلال", text: `مهنتي: ${finalResult.cls.name}`, url: location.href });
+    }
+  } catch (e) { /* المستخدم ألغى المشاركة */ }
+}
+
+/* ================= اليراعات ================= */
+(function makeFireflies() {
+  const box = $("fireflies");
+  for (let i = 0; i < 16; i++) {
+    const s = document.createElement("span");
+    s.style.left = Math.random() * 100 + "%";
+    s.style.top = (30 + Math.random() * 80) + "vh";
+    const d = 9 + Math.random() * 14;
+    s.style.animationDuration = d + "s, " + (0.8 + Math.random() * 1.6) + "s";
+    s.style.animationDelay = (-Math.random() * d) + "s, 0s";
+    const size = 3 + Math.random() * 4;
+    s.style.width = s.style.height = size + "px";
+    box.appendChild(s);
+  }
+})();
+</script>
+</body>
+</html>
