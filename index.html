@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>اختبار الشلال — أي مهنة تناسبك؟</title>
-<meta name="description" content="اختبار مستوحى من Dragon Quest III: أجب عن أسئلة عرّافة الشلال واكتشف أي مهنة مغامرة تناسب روحك — محارب، ساحر، لص، أم البطل النادر؟">
+<meta name="description" content="أجب عن أسئلة عرّافة الشلال واكتشف أي مهنة مغامرة تناسب روحك — محارب، ساحر، لص، أم البطل النادر؟ وهل تقودك خياراتك إلى نهاية جيدة أم سيئة؟">
 <meta name="theme-color" content="#08141c">
 
 <!-- Open Graph / Twitter -->
@@ -381,6 +381,61 @@
     background: rgba(0,0,0,.3);
   }
 
+  /* نقاط القوة والضعف */
+  .traits {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .trait-box {
+    border-radius: 6px;
+    padding: 13px 14px 12px;
+    background: rgba(4, 12, 18, .55);
+    box-shadow: inset 0 0 0 1px rgba(255,222,150,.1);
+  }
+  .trait-box h3 { font-size: 14px; margin-bottom: 9px; }
+  .trait-box.t-good { border: 2px solid rgba(140,238,178,.45); }
+  .trait-box.t-good h3 { color: #8ceeb2; }
+  .trait-box.t-bad { border: 2px solid rgba(255,138,112,.45); }
+  .trait-box.t-bad h3 { color: #ff8a70; }
+  .trait-box.t-bad .chip { --chip: #ff9d8a; }
+  @media (max-width: 560px) { .traits { grid-template-columns: 1fr; } }
+
+  /* نهايتك: جيدة أم سيئة؟ */
+  .ending {
+    display: none;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 22px;
+    background: rgba(4, 12, 18, .6);
+  }
+  .ending.show { display: block; animation: appear .5s ease; }
+  .ending.good { border: 2px solid rgba(140,238,178,.55); box-shadow: inset 0 0 0 1px rgba(140,238,178,.15), 0 0 30px rgba(140,238,178,.08); }
+  .ending.bad  { border: 2px solid rgba(255,110,110,.55); box-shadow: inset 0 0 0 1px rgba(255,110,110,.15), 0 0 30px rgba(180,40,40,.15); }
+  .end-img {
+    display: none;
+    width: 100%;
+    height: 170px;
+    object-fit: cover;
+    border-bottom: 2px solid rgba(227,193,105,.35);
+  }
+  .end-img.show { display: block; }
+  .end-body { padding: 14px 16px 15px; }
+  .end-badge {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 900;
+    letter-spacing: .5px;
+    padding: 3px 14px;
+    border-radius: 999px;
+    margin-bottom: 9px;
+  }
+  .ending.good .end-badge { color: #0d2b1a; background: linear-gradient(180deg, #a5f2c5, #6fce97); border: 1.5px solid #d2ffe4; }
+  .ending.bad  .end-badge { color: #ffe3dc; background: linear-gradient(180deg, #7e2a20, #55160f); border: 1.5px solid #ff9d8a; }
+  .end-text { font-size: 15.5px; line-height: 2; color: var(--text); margin-bottom: 8px; }
+  .end-reason { font-size: 13px; color: var(--dim); line-height: 1.9; }
+
   .section-title { color: var(--accent); font-size: 15px; font-weight: 900; margin-bottom: 10px; }
 
   .stats { margin-bottom: 22px; }
@@ -433,7 +488,7 @@
   <!-- شاشة البداية -->
   <section class="screen active dq-box" id="screen-start">
     <i class="corner c-tl"></i><i class="corner c-tr"></i><i class="corner c-bl"></i><i class="corner c-br"></i>
-    <div class="title-en">DRAGON QUEST INSPIRED</div>
+    <div class="title-en">THE WATERFALL TRIAL</div>
     <h1>اختبار الشلال</h1>
     <p class="subtitle">أي مهنة مغامرة تناسبك؟</p>
     <img class="intro-portrait" src="assets/port-seer.png" alt="عرّافة الشلال">
@@ -444,7 +499,6 @@
     </p>
     <button class="btn btn-gold" onclick="startQuiz()">▶ ابدأ الاختبار</button>
     <p class="hint blink">⩔ اضغط للبدء ⩔</p>
-    <p class="credit">مستوحى من اختبار الشخصية في Dragon Quest III</p>
   </section>
 
   <!-- شاشة الأسئلة -->
@@ -478,13 +532,32 @@
     <div class="why">
       <h3>لماذا تناسبك هذه المهنة؟</h3>
       <p id="rWhy"></p>
-      <div class="chips" id="rStr"></div>
+    </div>
+
+    <div class="traits">
+      <div class="trait-box t-good">
+        <h3>⚔️ نقاط القوة</h3>
+        <div class="chips" id="rStr"></div>
+      </div>
+      <div class="trait-box t-bad">
+        <h3>🕳️ نقاط الضعف</h3>
+        <div class="chips" id="rWeak"></div>
+      </div>
+    </div>
+
+    <div class="ending" id="endBox">
+      <img class="end-img" id="endImg" alt="مشهد النهاية">
+      <div class="end-body">
+        <span class="end-badge" id="endBadge"></span>
+        <p class="end-text" id="endText"></p>
+        <p class="end-reason" id="endReason"></p>
+      </div>
     </div>
 
     <p class="section-title">نسبة توافقك مع المهن:</p>
     <div class="stats" id="stats"></div>
 
-    <canvas id="shareCanvas" width="1200" height="675"></canvas>
+    <canvas id="shareCanvas" width="1200" height="1560"></canvas>
     <div class="btn-row">
       <button class="btn" id="btnNativeShare" onclick="nativeShare()" hidden>📤 شارك الصورة</button>
       <button class="btn" onclick="shareTwitter()">𝕏 غرّد نتيجتك</button>
@@ -501,35 +574,59 @@ const CLASSES = {
   warrior: { name: "المُحارِب", en: "WARRIOR", img: "assets/port-warrior.png", color: "#ff8a70",
     tag: "سيفٌ لا ينحني، ودرعٌ يحتمي خلفه الجميع.",
     why: "تختار المواجهة على المراوغة، وتتقدّم الصف حين يتراجع غيرك. الميدان المفتوح والقتال الشريف لغتك الأم، ورفاقك يعرفون أن ظهورهم محمية ما دمت واقفاً.",
-    strengths: ["ثبات تحت الضغط", "حماية الفريق", "حسم المواجهات"] },
+    strengths: ["ثبات تحت الضغط", "حماية الفريق", "حسم المواجهات"],
+    weaknesses: ["عناد لا يلين", "يحمل فوق طاقته", "المراوغة ليست لغته"],
+    endGood: "في المعركة الأخيرة تقف حيث وقفت دائماً: في مقدمة الصف. وحين ينقشع الغبار تُروى القصة جيلاً بعد جيل — صمد الدرع، ونجت القرية بأكملها خلفه.",
+    endBad: "حملت كل المعارك وحدك ورفضت أن تنحني حتى لنفسك… فانكسر السيف في يدٍ أنهكها العناد، ووقفت وحيداً في ميدانٍ لم يعد فيه من تحميه." },
   fighter: { name: "المُقاتِل", en: "MARTIAL ARTIST", img: "assets/port-fighter.png", color: "#ffb765",
     tag: "جسدك سلاحك، وغريزتك أسرع من أي خطة.",
     why: "تثق بجسدك وتدريبك أكثر من أي أداة أو تعويذة. تندفع حيث يتردد غيرك، وتتكيف في منتصف الحركة، وتضرب في اللحظة الصحيحة بلا تفكير زائد.",
-    strengths: ["سرعة البديهة", "اعتماد على الذات", "طاقة لا تنفد"] },
+    strengths: ["سرعة البديهة", "اعتماد على الذات", "طاقة لا تنفد"],
+    weaknesses: ["تهوّر واندفاع", "قلة صبر", "يملّ من الخطط الطويلة"],
+    endGood: "بعد ألف تمرين وألف نزال تبلغ القمة التي لا يصلها إلا جسدٌ آمن بصاحبه: تصير الأسطورة التي كسرت المستحيل بيديها العاريتين.",
+    endBad: "اندفعت حيث كان يجب أن تتوقف، وقاتلت معاركَ لم تكن معاركك… القوة بلا بوصلة أوصلتك إلى حلبةٍ فارغة لا يصفق فيها إلا الريح." },
   mage: { name: "السـاحِر", en: "MAGE", img: "assets/port-mage.png", color: "#79c8ff",
     tag: "من يفهم القواعد… يستطيع كسرها بأناقة.",
     why: "تحلّل قبل أن تتحرك، وتبحث عن السبب خلف كل ظاهرة. بينما يرى الآخرون باباً مغلقاً، ترى أنت آليته ونقشه وثغرته. المعرفة عندك قوة تُبنى صفحةً بعد صفحة.",
-    strengths: ["تحليل عميق", "حلول غير تقليدية", "تخطيط بعيد المدى"] },
+    strengths: ["تحليل عميق", "حلول غير تقليدية", "تخطيط بعيد المدى"],
+    weaknesses: ["إفراط في التحليل", "عزلة برج المعرفة", "بطء اتخاذ القرار"],
+    endGood: "يصير برجك منارةً يقصدها طلاب العلم من كل الممالك، والتعويذة التي روّضتها بصبرك تُدرَّس باسمك لقرونٍ قادمة.",
+    endBad: "غرقت في الكتب حتى نسيت الباب… عرفت كل شيء عن العالم، لكن العالم مضى ولم يعرفك، وبقيت تعويذتك الأعظم بلا شاهد." },
   priest: { name: "الكـاهِنة", en: "PRIEST", img: "assets/port-priest.png", color: "#ffdf8a",
     tag: "يدٌ تُداوي، وقلبٌ يتسع للجميع.",
     why: "قوة الفريق الحقيقية تمرّ من خلالك: تلملم الجراح والخواطر، وتتذكّر من نسيهم الجميع، وتذكّر رفاقك لماذا يقاتلون أصلاً. الرحمة عندك ليست ضعفاً بل أعظم أنواع الشجاعة.",
-    strengths: ["تعاطف صادق", "دعم لا يتزعزع", "ضمير الفريق"] },
+    strengths: ["تعاطف صادق", "دعم لا يتزعزع", "ضمير الفريق"],
+    weaknesses: ["تنسى نفسها", "ثقة قد تُستغل", "تحمل هموم الجميع"],
+    endGood: "اليد التي داوت الجميع لا تُنسى: تعود بعد سنين إلى القرية فتجد جيلاً كاملاً يحمل أسماء من أنقذتهم… وبعضهم يحمل اسمك.",
+    endBad: "أعطيت الجميع كل شيء ولم تُبقِ لنفسك شيئاً… وحين احتجت يداً تسندك، كان الجميع قد اعتاد أنك لا تحتاج أحداً." },
   thief: { name: "اللِّص", en: "THIEF", img: "assets/port-thief.png", color: "#cf9dff",
     tag: "ما من قفلٍ يصمد، وما من ظلٍ لا يسعك.",
     why: "ترى الطرق الجانبية التي لا يراها أحد، وتحلّ بالمهارة والخفة ما يحلّه غيرك بالقوة الغاشمة. تلاحظ التفاصيل الصغيرة، وتتحرك قبل أن يكتمل السؤال في رؤوس الآخرين.",
-    strengths: ["مرونة وخفة", "ملاحظة التفاصيل", "حلول ملتوية ذكية"] },
+    strengths: ["مرونة وخفة", "ملاحظة التفاصيل", "حلول ملتوية ذكية"],
+    weaknesses: ["لا يثق بسهولة", "يعمل وحيداً غالباً", "الملل عدوّه الأول"],
+    endGood: "يتقاعد الظل في النهاية أغنى من الملوك: خزائن لم تُفتح إلا لك، وحكايات تُروى في الحانات عن لصٍ نبيل لم يُمسكه أحد قط.",
+    endBad: "قفلٌ واحد أخير كان أذكى منك… ولأنك لم تثق بأحدٍ يوماً، لم يكن هناك من يطرق باب الزنزانة ليخرجك." },
   merchant: { name: "التـاجِر", en: "MERCHANT", img: "assets/port-merchant.png", color: "#8ceeb2",
     tag: "كل مأزق صفقة… ولكل صفقة ثمنها العادل.",
     why: "تعرف قيمة كل شيء: الوقت والجهد والذهب والكلمة. تتفاوض حيث يتشاجر الآخرون، وتخرج من الغرفة والجميع رابح — وأنت رابح أكثر قليلاً. الموارد بين يديك لا تنفد، بل تتضاعف.",
-    strengths: ["تفاوض محترف", "إدارة الموارد", "اقتناص الفرص"] },
+    strengths: ["تفاوض محترف", "إدارة الموارد", "اقتناص الفرص"],
+    weaknesses: ["يرى الثمن قبل القيمة", "قلق دائم من الخسارة", "الصفقة قبل العاطفة"],
+    endGood: "تصير قافلتك طريق تجارةٍ يحمل اسمك على الخرائط، وكل ميناءٍ دخلته يوماً فقيراً صار يستقبلك بالأعلام.",
+    endBad: "ربحت كل صفقة وخسرت كل شريك… وفي ليلة الجرد الأخيرة أدركت أن أغلى ما في الدفاتر لم يكن له سعر — وقد بعته منذ زمن." },
   jester: { name: "المُهرِّج", en: "JESTER", img: "assets/port-jester.png", color: "#ff9de0",
     tag: "الضحكة سلاح… ومن قال إن إنقاذ العالم يجب أن يكون كئيباً؟",
     why: "تكسر التوتر بنكتة، وتقلب أسوأ المواقف مسرحاً. لا أحد يتوقع خطوتك التالية — وأحياناً حتى أنت لا تتوقعها — وهذا بالضبط ما يجعل الخصوم يرتبكون والرفاق يبتسمون.",
-    strengths: ["كاريزما جارفة", "إبداع فوضوي", "رفع معنويات الفريق"] },
+    strengths: ["كاريزما جارفة", "إبداع فوضوي", "رفع معنويات الفريق"],
+    weaknesses: ["يهرب من الجدية", "فوضى تربك الخطط", "يخفي همّه خلف الضحكة"],
+    endGood: "تقف في الختام على أعظم مسرح في الممالك، والملك نفسه يضحك من قلبه لأول مرة منذ الحرب… ضحكتك أنقذت ما عجزت عنه الجيوش.",
+    endBad: "ضحك الجميع حتى النهاية… إلا أنت. خبأت وجعك خلف كل نكتة حتى نسي الناس أن يسألوا، ونسيت أنت كيف تجيب." },
   hero: { name: "البَطَل", en: "HERO ★", img: "assets/port-hero.png", color: "#fff0b0",
     tag: "روحٌ متوازنة نادرة… القدر نفسه ينتظر أمثالك.",
     why: "لم تمِل لطرف واحد: فيك شيء من شجاعة المحارب، وحكمة الساحر، ورحمة الكاهنة، ودهاء اللص معاً. هذا التوازن النادر بالذات هو ما تُنسَج منه الأساطير — قلة عبر التاريخ حصلوا على هذه النتيجة.",
-    strengths: ["توازن نادر", "قيادة فطرية", "قدر استثنائي"] },
+    strengths: ["توازن نادر", "قيادة فطرية", "قدر استثنائي"],
+    weaknesses: ["يريد إنقاذ الجميع", "ثقل التوقعات", "لا يعرف الراحة"],
+    endGood: "الشلال لا يهمس باسم البطل إلا مرة كل جيل… رحلتك ستُكتب في كتبٍ يقرأها أطفال لم يولدوا بعد، وسيفك سيُغرس في صخرةٍ تنتظر بطلاً آخر.",
+    endBad: "الشلال لا يهمس باسم البطل إلا مرة كل جيل… رحلتك ستُكتب في كتبٍ يقرأها أطفال لم يولدوا بعد، وسيفك سيُغرس في صخرةٍ تنتظر بطلاً آخر." },
 };
 
 /* ================= بنك الأسئلة (20 سؤالاً — تُسحب 10 عشوائياً) =================
@@ -834,7 +931,13 @@ function computeResult() {
   // «البطل»: نتيجة نادرة لمن كانت أعلى أربع مهنه متقاربة جداً (روح متوازنة)
   const isHero = scores[sorted[0]] > 0 && (scores[sorted[0]] - scores[sorted[3]]) <= 2;
   const key = isHero ? "hero" : sorted[0];
-  return { key, cls: CLASSES[key], isHero, sorted, pct };
+
+  // النهاية: الخيارات الحاسمة المتسقة (صدارة واضحة) تقود لنهاية جيدة،
+  // والخيارات المشتتة المتناقضة لنهاية سيئة. البطل نهايته مجد دائماً.
+  const goodEnd = isHero
+    || (scores[sorted[0]] - scores[sorted[1]]) >= 3
+    || scores[sorted[0]] >= 11;
+  return { key, cls: CLASSES[key], isHero, sorted, pct, goodEnd };
 }
 
 const IMG_CACHE = {};
@@ -859,9 +962,25 @@ async function finish() {
   $("rBadge").classList.toggle("show", finalResult.isHero);
   $("rStr").innerHTML = c.strengths
     .map(s => `<span class="chip" style="--chip:${c.color}">${s}</span>`).join("");
+  $("rWeak").innerHTML = c.weaknesses
+    .map(s => `<span class="chip">${s}</span>`).join("");
 
-  const [portrait, bg, corner] = await Promise.all([
+  // قسم النهاية
+  const good = finalResult.goodEnd;
+  const endBox = $("endBox");
+  endBox.classList.remove("good", "bad");
+  endBox.classList.add("show", good ? "good" : "bad");
+  $("endBadge").textContent = good ? "★ نهايتك: نهاية جيدة" : "☠ نهايتك: نهاية سيئة";
+  $("endText").textContent = good ? c.endGood : c.endBad;
+  $("endReason").textContent = finalResult.isHero
+    ? "توازنك النادر بذاته هو القدر — لا نهاية للبطل إلا المجد."
+    : good
+      ? "لماذا؟ لأن خياراتك كانت واضحة حاسمة — والشلال يكافئ من يعرف نفسه."
+      : "لماذا؟ لأن خياراتك كانت مشتّتة متناقضة — ومن لا يختار طريقه، يختاره الطريق. أعد الاختبار بقلبٍ أثبت… لعل النهاية تتبدل.";
+
+  const [portrait, bg, corner, endImg] = await Promise.all([
     loadImg(c.img), loadImg("assets/bg-falls.jpg"), loadImg("assets/corner.png"),
+    loadImg(good ? "assets/end-good.jpg" : "assets/end-bad.jpg"),
   ]);
   const pEl = $("rPortrait");
   if (portrait) {
@@ -870,8 +989,14 @@ async function finish() {
     pEl.classList.toggle("hero-glow", finalResult.isHero);
   } else pEl.classList.remove("show");
 
+  const endImgEl = $("endImg");
+  if (endImg) {
+    endImgEl.src = endImg.src;
+    endImgEl.classList.add("show");
+  } else endImgEl.classList.remove("show");
+
   renderStats(finalResult);
-  renderCardTo($("shareCanvas"), finalResult, portrait, bg, corner);
+  renderCardTo($("shareCanvas"), finalResult, portrait, bg, corner, endImg);
   if (navigator.canShare) $("btnNativeShare").hidden = false;
   show("screen-result");
   (finalResult.isHero ? sfx.rare : sfx.result)();
@@ -899,20 +1024,20 @@ function renderStats(r) {
 
 function restart() { sfx.select(); show("screen-start"); }
 
-/* ================= بطاقة المشاركة (Canvas) ================= */
-function renderCardTo(cv, r, portrait, bg, corner) {
+/* ================= بطاقة المشاركة (Canvas 1200×1560 — تعرض كل شيء) ================= */
+function renderCardTo(cv, r, portrait, bg, corner, endImg) {
   const ctx = cv.getContext("2d");
   const W = cv.width, H = cv.height;
   const c = r.cls;
-  const cx = portrait ? (W - 320) / 2 : W / 2;
-  const textMaxW = portrait ? 560 : W - 240;
+  const cx = W / 2;
+  const good = r.goodEnd;
 
   // الخلفية: مشهد الشلال المرسوم مع تعتيم
   if (bg) {
     const s = Math.max(W / bg.width, H / bg.height);
     const bw = bg.width * s, bh = bg.height * s;
     ctx.drawImage(bg, (W - bw) / 2, (H - bh) / 2, bw, bh);
-    ctx.fillStyle = "rgba(4, 11, 17, .8)";
+    ctx.fillStyle = "rgba(4, 11, 17, .82)";
     ctx.fillRect(0, 0, W, H);
   } else {
     const g = ctx.createLinearGradient(0, 0, 0, H);
@@ -944,72 +1069,121 @@ function renderCardTo(cv, r, portrait, bg, corner) {
   ctx.textAlign = "center";
   ctx.direction = "rtl";
 
-  // بورتريه المهنة (عرضي 3:2) على يمين البطاقة
+  // العنوان
+  ctx.fillStyle = "#7fd4c1";
+  ctx.font = "700 30px Cairo, sans-serif";
+  ctx.fillText("⛲ اختبار الشلال — أي مهنة تناسبك؟ ⛲", cx, 98);
+
+  // بورتريه المهنة في المنتصف
   if (portrait) {
-    const pw = 310, ph = 203;
-    const px = W - 370, py = 122;
+    const pw = 540, ph = 354;
+    const px = (W - pw) / 2, py = 130;
     ctx.save();
-    roundRect(ctx, px, py, pw, ph, 8);
+    roundRect(ctx, px, py, pw, ph, 10);
     ctx.clip();
-    // قصّ يملأ الإطار من صورة قد لا تطابق النسبة
     const s = Math.max(pw / portrait.width, ph / portrait.height);
     const iw = portrait.width * s, ih = portrait.height * s;
     ctx.drawImage(portrait, px + (pw - iw) / 2, py + (ph - ih) / 2, iw, ih);
     ctx.restore();
     ctx.strokeStyle = r.isHero ? "#ffd98f" : "#a8853a";
-    ctx.lineWidth = 5;
-    roundRect(ctx, px, py, pw, ph, 8); ctx.stroke();
+    ctx.lineWidth = 6;
+    roundRect(ctx, px, py, pw, ph, 10); ctx.stroke();
     ctx.strokeStyle = "rgba(255,222,150,.55)";
     ctx.lineWidth = 1.5;
-    roundRect(ctx, px + 6, py + 6, pw - 12, ph - 12, 5); ctx.stroke();
+    roundRect(ctx, px + 7, py + 7, pw - 14, ph - 14, 6); ctx.stroke();
   }
-
-  // العنوان
-  ctx.fillStyle = "#7fd4c1";
-  ctx.font = "700 27px Cairo, sans-serif";
-  ctx.fillText("⛲ اختبار الشلال — أي مهنة تناسبك؟ ⛲", cx, 96);
 
   // «مهنتك»
   ctx.fillStyle = "#a9b6a9";
-  ctx.font = "700 25px Cairo, sans-serif";
-  ctx.fillText(r.isHero ? "★ نتيجة نادرة… مهنتك ★" : "مهنتك المقدَّرة:", cx, 150);
+  ctx.font = "700 26px Cairo, sans-serif";
+  ctx.fillText(r.isHero ? "★ نتيجة نادرة… مهنتك ★" : "الشلال قرأ روحك… ومهنتك:", cx, portrait ? 540 : 200);
 
   // اسم المهنة
-  let size = 82;
+  let size = 84;
   ctx.font = `900 ${size}px Cairo, sans-serif`;
-  while (ctx.measureText(c.name).width > textMaxW && size > 40) {
+  while (ctx.measureText(c.name).width > 1000 && size > 40) {
     size -= 4;
     ctx.font = `900 ${size}px Cairo, sans-serif`;
   }
   ctx.fillStyle = r.isHero ? "#fff0b0" : "#ffd98f";
   ctx.shadowColor = "rgba(0,0,0,.7)";
   ctx.shadowOffsetY = 5;
-  ctx.fillText(c.name, cx, 238);
+  ctx.fillText(c.name, cx, 628);
   ctx.shadowColor = "transparent";
   ctx.shadowOffsetY = 0;
 
   // الاسم الإنجليزي
   ctx.fillStyle = "#7fd4c1";
-  ctx.font = "19px 'Press Start 2P', monospace";
-  ctx.fillText(c.en, cx, 282);
+  ctx.font = "20px 'Press Start 2P', monospace";
+  ctx.fillText(c.en, cx, 672);
 
   // الوصف القصير
   ctx.fillStyle = "#f3ecd9";
-  ctx.font = "600 28px Cairo, sans-serif";
-  wrapText(ctx, c.tag, cx, 340, textMaxW, 45);
+  ctx.font = "600 30px Cairo, sans-serif";
+  wrapText(ctx, c.tag, cx, 726, 1020, 46);
+
+  // فاصل
+  ctx.strokeStyle = "rgba(227,193,105,.4)";
+  ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(140, 792); ctx.lineTo(W - 140, 792); ctx.stroke();
+
+  // عمودا القوة (يمين) والضعف (يسار)
+  const colY = 848, lineH = 44;
+  ctx.textAlign = "right";
+  ctx.font = "800 27px Cairo, sans-serif";
+  ctx.fillStyle = "#8ceeb2";
+  ctx.fillText("◆ نقاط القوة", W - 150, colY);
+  ctx.fillStyle = "#ff8a70";
+  ctx.fillText("◆ نقاط الضعف", cx - 80, colY);
+  ctx.font = "600 25px Cairo, sans-serif";
+  c.strengths.forEach((s, i) => {
+    ctx.fillStyle = "#f3ecd9";
+    ctx.fillText("• " + s, W - 150, colY + 46 + i * lineH);
+  });
+  c.weaknesses.forEach((s, i) => {
+    ctx.fillStyle = "#d8cdb8";
+    ctx.fillText("• " + s, cx - 80, colY + 46 + i * lineH);
+  });
+  ctx.textAlign = "center";
+
+  // شريط النهاية (جيدة/سيئة)
+  const ex = 60, ey = 1046, ew = W - 120, eh = 214;
+  ctx.save();
+  roundRect(ctx, ex, ey, ew, eh, 10);
+  ctx.clip();
+  if (endImg) {
+    const s = Math.max(ew / endImg.width, eh / endImg.height);
+    const iw = endImg.width * s, ih = endImg.height * s;
+    ctx.drawImage(endImg, ex + (ew - iw) / 2, ey + (eh - ih) / 2, iw, ih);
+    ctx.fillStyle = "rgba(4, 11, 17, .68)";
+  } else {
+    ctx.fillStyle = good ? "rgba(20, 46, 32, .85)" : "rgba(46, 16, 12, .85)";
+  }
+  ctx.fillRect(ex, ey, ew, eh);
+  ctx.restore();
+  ctx.strokeStyle = good ? "#8ceeb2" : "#ff6e6e";
+  ctx.lineWidth = 4;
+  roundRect(ctx, ex, ey, ew, eh, 10); ctx.stroke();
+
+  ctx.fillStyle = good ? "#a5f2c5" : "#ff9d8a";
+  ctx.font = "900 30px Cairo, sans-serif";
+  ctx.fillText(good ? "★ نهايتك: نهاية جيدة ★" : "☠ نهايتك: نهاية سيئة ☠", cx, ey + 52);
+  ctx.fillStyle = "#f3ecd9";
+  ctx.font = "600 24px Cairo, sans-serif";
+  wrapText(ctx, good ? c.endGood : c.endBad, cx, ey + 100, 1000, 40);
 
   // أعلى 3 مهن — أشرطة
   const top3 = r.sorted.slice(0, 3);
-  const barY0 = 452, rowH = 48;
-  const barRight = W - 330, barW = 540, barH = 22;
+  const barY0 = 1320, rowH = 52;
+  const barRight = W - 320, barW = 580, barH = 24;
   top3.forEach((k, i) => {
     const t = CLASSES[k];
     const y = barY0 + i * rowH;
 
     ctx.textAlign = "right";
     ctx.fillStyle = "#f3ecd9";
-    ctx.font = "800 25px Cairo, sans-serif";
-    ctx.fillText(t.name, W - 170, y + barH - 4);
+    ctx.font = "800 26px Cairo, sans-serif";
+    ctx.fillText(t.name, W - 155, y + barH - 4);
 
     ctx.fillStyle = "rgba(0,0,0,.4)";
     roundRect(ctx, barRight - barW, y, barW, barH, 5); ctx.fill();
@@ -1022,15 +1196,15 @@ function renderCardTo(cv, r, portrait, bg, corner) {
 
     ctx.textAlign = "left";
     ctx.fillStyle = "#a9b6a9";
-    ctx.font = "700 21px 'Press Start 2P', Cairo, monospace";
-    ctx.fillText(r.pct[k] + "%", 175, y + barH - 3);
+    ctx.font = "700 22px 'Press Start 2P', Cairo, monospace";
+    ctx.fillText(r.pct[k] + "%", 160, y + barH - 3);
   });
   ctx.textAlign = "center";
 
   // التذييل
   ctx.fillStyle = "#a9b6a9";
-  ctx.font = "700 22px Cairo, sans-serif";
-  ctx.fillText("جرّب الاختبار بنفسك — همس الشلال ينتظرك", W / 2, H - 46);
+  ctx.font = "700 23px Cairo, sans-serif";
+  ctx.fillText("جرّب الاختبار بنفسك — همس الشلال ينتظرك", W / 2, H - 50);
 }
 
 function roundRect(ctx, x, y, w, h, r) {
@@ -1088,7 +1262,8 @@ async function downloadImage() {
 function shareTwitter() {
   const c = finalResult.cls;
   const rare = finalResult.isHero ? "★ نتيجة نادرة ★\n" : "";
-  const text = `⛲ اختبار الشلال حدد مهنتي: «${c.name}» (${c.en})\n${rare}${c.tag}\n\nوأنت… أي مهنة تناسبك؟ 👇`;
+  const end = finalResult.goodEnd ? "خياراتي قادتني إلى نهاية جيدة ★" : "خياراتي قادتني إلى نهاية سيئة ☠";
+  const text = `⛲ اختبار الشلال حدد مهنتي: «${c.name}» (${c.en})\n${rare}${c.tag}\n${end}\n\nوأنت… أي مهنة تناسبك؟ 👇`;
   const url = location.origin.startsWith("http") ? location.href : "";
   window.open(
     "https://twitter.com/intent/tweet?text=" + encodeURIComponent(text) +
