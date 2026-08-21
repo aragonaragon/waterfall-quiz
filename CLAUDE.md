@@ -8,5 +8,6 @@
 - كل الموقع في `index.html` واحد (HTML+CSS+JS). لا build، لا مكتبات.
 - التشغيل محلياً: سيرفر `waterfall-quiz` في `.claude/launch.json` (بورت 8123). لا تفتح بـfile://.
 - الأسئلة في `QUESTION_BANK` (30 سؤالاً، الجولة تسحب 10) والمهن في `CLASSES`. مفاتيح المهن: warrior, fighter, mage, priest, thief, merchant, jester (+hero نتيجة نادرة محسوبة، لا تُستخدم في الأسئلة).
-- النشر: `netlify deploy --prod --dir .` (فريق nathoool92 → ikhtibar-al-shallal.netlify.app) و`git push` (GitHub Pages احتياطي).
+- **قاعدة صارمة: لا تنشر إلا إذا طلب المستخدم النشر صراحةً** — لا `netlify deploy` ولا `git push` من تلقاء نفسك (الـpush ينشر على GitHub Pages). الكوميت المحلي مسموح. بعد أي تعديل: تحقّق محلياً واعرض النتيجة ثم انتظر أمر النشر.
+- النشر (عند الطلب فقط): `netlify deploy --prod --dir .` (فريق nathoool92 → ikhtibar-al-shallal.netlify.app) و`git push` (GitHub Pages احتياطي).
 - التواصل مع المستخدم بالعربية.
