@@ -9,13 +9,13 @@
 
 <!-- Open Graph / Twitter -->
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://ikhtibar-al-shallal.netlify.app/">
+<meta property="og:url" content="https://aragonrpg.netlify.app/">
 <meta property="og:title" content="اختبار الشلال — أي مهنة تناسبك؟">
 <meta property="og:description" content="أجب بصدق، فالشلال لا يُخدَع. اكتشف مهنتك: محارب، ساحر، كاهن، لص، تاجر، مقاتل، مهرّج… أم البطل النادر؟">
-<meta property="og:image" content="https://ikhtibar-al-shallal.netlify.app/assets/bg-falls.jpg">
+<meta property="og:image" content="https://aragonrpg.netlify.app/assets/bg-falls.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="اختبار الشلال — أي مهنة تناسبك؟">
-<meta name="twitter:image" content="https://ikhtibar-al-shallal.netlify.app/assets/bg-falls.jpg">
+<meta name="twitter:image" content="https://aragonrpg.netlify.app/assets/bg-falls.jpg">
 
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚔️</text></svg>">
 <link rel="apple-touch-icon" href="assets/icon.png">
@@ -309,13 +309,13 @@
     .stat-row { grid-template-columns: 62px 1fr 40px; font-size: 13px; }
   }
 
-  /* ===== شاشة النتيجة ===== */
+  /* ===== شاشة النتيجة (مضغوطة) ===== */
   .portrait {
     display: none;
-    width: 290px;
-    height: 189px;
+    width: 235px;
+    height: 153px;
     max-width: 100%;
-    margin: 0 auto 14px;
+    margin: 0 auto 10px;
     border: 3px solid var(--gold-dark);
     border-radius: 6px;
     box-shadow: inset 0 0 0 1px rgba(255,222,150,.45), 0 12px 34px rgba(0,0,0,.6), 0 0 40px rgba(255,215,130,.18);
@@ -328,8 +328,8 @@
   .badge-rare {
     display: none;
     width: fit-content;
-    margin: 0 auto 10px;
-    padding: 4px 18px;
+    margin: 0 auto 8px;
+    padding: 3px 14px;
     border: 2px solid var(--gold);
     border-radius: 999px;
     color: var(--gold-bright);
@@ -341,10 +341,10 @@
   }
   .badge-rare.show { display: block; }
 
-  .result-label { text-align: center; color: var(--dim); font-size: 15px; margin-bottom: 4px; }
+  .result-label { text-align: center; color: var(--dim); font-size: 14px; margin-bottom: 2px; }
   .result-name {
     text-align: center;
-    font-size: clamp(30px, 6vw, 46px);
+    font-size: clamp(26px, 5vw, 38px);
     font-weight: 900;
     color: var(--gold-bright);
     text-shadow: 0 2px 0 #5d451a, 0 0 26px rgba(255,215,130,.3);
@@ -356,25 +356,25 @@
     font-size: 10px;
     letter-spacing: 3px;
     color: var(--accent);
-    margin: 2px 0 12px;
+    margin: 2px 0 8px;
   }
-  .result-tag { text-align: center; font-size: 17px; font-weight: 800; color: var(--text); margin-bottom: 18px; line-height: 1.9; }
+  .result-tag { text-align: center; font-size: 15.5px; font-weight: 800; color: var(--text); margin-bottom: 12px; line-height: 1.8; }
 
   .why {
     border: 2px solid rgba(168,133,58,.55);
     border-radius: 6px;
-    padding: 16px 18px 14px;
-    margin-bottom: 20px;
+    padding: 11px 14px 10px;
+    margin-bottom: 12px;
     background: rgba(4, 12, 18, .55);
     box-shadow: inset 0 0 0 1px rgba(255,222,150,.12);
   }
-  .why h3 { color: var(--accent); font-size: 15px; margin-bottom: 6px; }
-  .why p { font-size: 15.5px; line-height: 1.95; color: var(--text); margin-bottom: 12px; }
-  .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+  .why h3 { color: var(--accent); font-size: 13.5px; margin-bottom: 4px; }
+  .why p { font-size: 14.5px; line-height: 1.8; color: var(--text); }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; }
   .chip {
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 800;
-    padding: 4px 12px;
+    padding: 3px 10px;
     border-radius: 999px;
     border: 2px solid var(--chip, var(--accent));
     color: var(--chip, var(--accent));
@@ -385,29 +385,28 @@
   .traits {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 20px;
+    gap: 10px;
+    margin-bottom: 12px;
   }
   .trait-box {
     border-radius: 6px;
-    padding: 13px 14px 12px;
+    padding: 9px 12px 8px;
     background: rgba(4, 12, 18, .55);
     box-shadow: inset 0 0 0 1px rgba(255,222,150,.1);
   }
-  .trait-box h3 { font-size: 14px; margin-bottom: 9px; }
+  .trait-box h3 { font-size: 13px; margin-bottom: 7px; }
   .trait-box.t-good { border: 2px solid rgba(140,238,178,.45); }
   .trait-box.t-good h3 { color: #8ceeb2; }
   .trait-box.t-bad { border: 2px solid rgba(255,138,112,.45); }
   .trait-box.t-bad h3 { color: #ff8a70; }
   .trait-box.t-bad .chip { --chip: #ff9d8a; }
-  @media (max-width: 560px) { .traits { grid-template-columns: 1fr; } }
 
   /* نهايتك: جيدة أم سيئة؟ */
   .ending {
     display: none;
     border-radius: 6px;
     overflow: hidden;
-    margin-bottom: 22px;
+    margin-bottom: 14px;
     background: rgba(4, 12, 18, .6);
   }
   .ending.show { display: block; animation: appear .5s ease; }
@@ -416,41 +415,41 @@
   .end-img {
     display: none;
     width: 100%;
-    height: 170px;
+    height: 105px;
     object-fit: cover;
     border-bottom: 2px solid rgba(227,193,105,.35);
   }
   .end-img.show { display: block; }
-  .end-body { padding: 14px 16px 15px; }
+  .end-body { padding: 10px 14px 11px; }
   .end-badge {
     display: inline-block;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 900;
     letter-spacing: .5px;
-    padding: 3px 14px;
+    padding: 2px 12px;
     border-radius: 999px;
-    margin-bottom: 9px;
+    margin-bottom: 6px;
   }
   .ending.good .end-badge { color: #0d2b1a; background: linear-gradient(180deg, #a5f2c5, #6fce97); border: 1.5px solid #d2ffe4; }
   .ending.bad  .end-badge { color: #ffe3dc; background: linear-gradient(180deg, #7e2a20, #55160f); border: 1.5px solid #ff9d8a; }
-  .end-text { font-size: 15.5px; line-height: 2; color: var(--text); margin-bottom: 8px; }
-  .end-reason { font-size: 13px; color: var(--dim); line-height: 1.9; }
+  .end-text { font-size: 14.5px; line-height: 1.8; color: var(--text); margin-bottom: 5px; }
+  .end-reason { font-size: 12px; color: var(--dim); line-height: 1.8; }
 
-  .section-title { color: var(--accent); font-size: 15px; font-weight: 900; margin-bottom: 10px; }
+  .section-title { color: var(--accent); font-size: 14px; font-weight: 900; margin-bottom: 6px; }
 
-  .stats { margin-bottom: 22px; }
+  .stats { margin-bottom: 14px; }
   .stat-row {
     display: grid;
-    grid-template-columns: 72px 1fr 46px;
+    grid-template-columns: 64px 1fr 40px;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 8px;
-    font-size: 14px;
+    gap: 8px;
+    margin-bottom: 4px;
+    font-size: 13px;
     font-weight: 800;
   }
-  .stat-row .pct { text-align: left; color: var(--dim); font-family: "Press Start 2P", monospace; font-size: 9px; direction: ltr; }
+  .stat-row .pct { text-align: left; color: var(--dim); font-family: "Press Start 2P", monospace; font-size: 8px; direction: ltr; }
   .stat-bar {
-    height: 14px;
+    height: 10px;
     border: 2px solid rgba(227,193,105,.5);
     border-radius: 4px;
     overflow: hidden;
@@ -464,15 +463,21 @@
     transition: width .9s cubic-bezier(.2,.8,.2,1);
   }
 
+  /* البطاقة مصغّرة افتراضياً — الضغط عليها يكبّرها */
   #shareCanvas {
     display: block;
-    width: 100%;
+    width: 210px;
+    max-width: 100%;
     height: auto;
     border: 3px solid var(--gold-dark);
     border-radius: 6px;
     box-shadow: inset 0 0 0 1px rgba(255,222,150,.3);
-    margin-bottom: 16px;
+    margin: 0 auto 3px;
+    cursor: zoom-in;
+    transition: width .25s ease;
   }
+  #shareCanvas.big { width: 100%; cursor: zoom-out; }
+  .canvas-hint { text-align: center; color: var(--dim); font-size: 11.5px; margin-bottom: 12px; }
   .hint { text-align: center; color: var(--dim); font-size: 13px; margin-top: 14px; }
   .credit { text-align: center; color: var(--dim); font-size: 12px; margin-top: 18px; opacity: .7; }
 </style>
@@ -557,7 +562,8 @@
     <p class="section-title">نسبة توافقك مع المهن:</p>
     <div class="stats" id="stats"></div>
 
-    <canvas id="shareCanvas" width="1200" height="1560"></canvas>
+    <canvas id="shareCanvas" width="1200" height="1560" onclick="this.classList.toggle('big')"></canvas>
+    <p class="canvas-hint">🔍 اضغط على البطاقة لتكبيرها</p>
     <div class="btn-row">
       <button class="btn" id="btnNativeShare" onclick="nativeShare()" hidden>📤 شارك الصورة</button>
       <button class="btn" onclick="shareTwitter()">𝕏 غرّد نتيجتك</button>

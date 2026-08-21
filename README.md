@@ -3,7 +3,7 @@
 اختبار شخصية عربي بروح الـJRPG الكلاسيكية:
 تجاوب على أسئلة «عرّافة الشلال» وتكتشف أي مهنة مغامرة تناسب روحك — وهل تقودك خياراتك إلى نهاية جيدة أم سيئة.
 
-**جرّبه الآن:** https://ikhtibar-al-shallal.netlify.app
+**جرّبه الآن:** https://aragonrpg.netlify.app
 
 ![معاينة](assets/bg-falls.jpg)
 
@@ -42,7 +42,7 @@ HANDOFF.md        ← دليل المطور: كيف تعدل الأسئلة وا
 
 | | |
 |---|---|
-| الإنتاج | [ikhtibar-al-shallal.netlify.app](https://ikhtibar-al-shallal.netlify.app) — فريق Netlify: `nathoool92` |
+| الإنتاج | [aragonrpg.netlify.app](https://aragonrpg.netlify.app) — فريق Netlify: `nathoool92` |
 | احتياطي | [aragonaragon.github.io/waterfall-quiz](https://aragonaragon.github.io/waterfall-quiz/) — GitHub Pages |
 
 التفاصيل الكاملة للتعديل والنشر في [HANDOFF.md](HANDOFF.md).

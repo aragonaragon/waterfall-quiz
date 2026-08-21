@@ -112,7 +112,7 @@ out.save("assets/corner.png")
 ## 8. النشر
 
 ### Netlify (الإنتاج — الرابط الرسمي)
-- **الموقع**: https://ikhtibar-al-shallal.netlify.app
+- **الموقع**: https://aragonrpg.netlify.app
 - **الفريق**: `nathoool92` (حساب nathoool92@gmail.com — لازم تكون مسجلاً به في netlify-cli)
 - المجلد مربوط بالموقع (`.netlify/` مُتجاهَلة في git):
 
