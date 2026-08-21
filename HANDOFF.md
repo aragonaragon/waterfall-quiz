@@ -1,0 +1,145 @@
+# 📜 دليل التسليم — اختبار الشلال
+
+هذا الدليل يشرح كل ما تحتاجه لتعديل المشروع محلياً ونشره. آخر تحديث: أغسطس 2026.
+
+---
+
+## 1. نظرة عامة
+
+- **ملف واحد**: كل الموقع في `index.html` (HTML + CSS + JS مضمّنة). لا يوجد build ولا مكتبات خارجية — فقط خطوط Google Fonts (Cairo + Press Start 2P).
+- **RTL عربي** بالكامل.
+- الترتيب داخل `index.html`:
+  1. `<head>`: وسوم OG/Twitter (روابط مطلقة للإنتاج) + الخطوط
+  2. `<style>`: التنسيقات (مقسمة بتعليقات: الخلفية، اليراعات، اللوحة، البداية، الأسئلة، النتيجة…)
+  3. `<body>`: ثلاث شاشات `<section class="screen">`: `screen-start` / `screen-quiz` / `screen-result`
+  4. `<script>`: البيانات (`CLASSES`, `QUESTION_BANK`) ثم المنطق ثم رسم البطاقة ثم المشاركة
+
+## 2. التشغيل محلياً
+
+```bash
+cd "~/Documents/game wen"
+python3 -m http.server 8123
+```
+
+افتح http://localhost:8123. **لا تستخدم `file://`** — المتصفح يمنع تصدير كانفس فيها صور محلية (canvas taint)، وفيه خطة بديلة بالكود لكنها ترسم البطاقة بدون بورتريه.
+
+> يوجد `.claude/launch.json` باسم `waterfall-quiz` يشغّل نفس السيرفر تلقائياً من Claude Code.
+
+## 3. تعديل الأسئلة
+
+البنك في `QUESTION_BANK` داخل `index.html`. صيغة السؤال:
+
+```js
+{ q: "نص السؤال…",
+  c: [ ["نص الخيار", "المهنة الأساسية (+2)", "المهنة الثانوية (+1)"],
+       // 4 خيارات بالضبط لكل سؤال
+     ] },
+```
+
+- مفاتيح المهن: `warrior` `fighter` `mage` `priest` `thief` `merchant` `jester` (لا تستخدم `hero` في الأسئلة — البطل نتيجة محسوبة فقط)
+- المهنة الثانوية اختيارية لكن يفضّل وجودها دائماً (توازن أدق)
+- حالياً: 30 سؤالاً، كل جولة تسحب `QUIZ_LENGTH = 10` عشوائياً
+- حافظ على توازن التوزيع: كل مهنة يفترض تكون «أساسية» في 12–20 خياراً تقريباً عبر البنك
+- **فحص سريع بعد أي تعديل** (من كونسول المتصفح):
+
+```js
+const counts = {};
+QUESTION_BANK.forEach(q => q.c.forEach(([t,p,s]) => counts[p] = (counts[p]||0)+1));
+console.log(QUESTION_BANK.length, counts);
+```
+
+## 4. تعديل المهن والنتائج
+
+كائن `CLASSES` — لكل مهنة:
+
+| الحقل | الوصف |
+|---|---|
+| `name` | الاسم العربي المعروض |
+| `en` | الاسم الإنجليزي (يظهر بخط البكسل) |
+| `img` | مسار البورتريه `assets/port-*.png` |
+| `color` | لون أشرطة النسب والشارات |
+| `tag` | الجملة القصيرة (تظهر تحت الاسم وفي بطاقة المشاركة) |
+| `why` | فقرة «لماذا تناسبك هذه المهنة؟» |
+| `strengths` | 3 نقاط قوة (شارات) |
+
+- **النقاط**: كل إجابة تعطي +2 للمهنة الأساسية و+1 للثانوية.
+- **قاعدة البطل** (في `computeResult`): إذا `أعلى نتيجة − رابع نتيجة ≤ 2` تظهر نتيجة `hero` النادرة. عدّل الرقم `2` لتغيير ندرتها (أكبر = أسهل).
+
+## 5. الرسومات (assets/)
+
+| الملف | المقاس | الاستخدام |
+|---|---|---|
+| `port-{class}.png` ×9 | 492×321 (عرضي 3:2) | بورتريهات المهن + `port-seer.png` للعرّافة |
+| `bg-falls.jpg` | 1600×1066 | خلفية الصفحة + خلفية بطاقة المشاركة + صورة OG |
+| `corner.png` | 640×640 **بشفافية** | زخرفة الزوايا الأربع (تُعكس بـCSS transform) |
+| `icon.png` | 360×360 | apple-touch-icon |
+
+- الأصول بدقة كاملة في `art-source/` (شبكة الشخصيات 3×3 + الخلفية + الزخرفة).
+- **الستايل الفني**: رسم أنمي درامي داكن بروح Fire Emblem / FF الكلاسيكية، إضاءة ذهبية.
+- عند توليد بورتريه جديد: خلّ الوجه قريب من منتصف الكادر (العرض يقص بـ`object-fit: cover`).
+- إذا جات الزخرفة بخلفية سوداء بدل شفافة، حوّلها (ألفا = أقوى قناة لون):
+
+```python
+from PIL import Image
+im = Image.open("corner.png").convert("RGB")
+out = Image.new("RGBA", im.size)
+for y in range(im.height):
+    for x in range(im.width):
+        r,g,b = im.getpixel((x,y))
+        out.putpixel((x,y), (r,g,b, max(r,g,b)))
+out.save("assets/corner.png")
+```
+
+- لقص شبكة شخصيات 3×3 جديدة: نفس ترتيب الصفوف `warrior,fighter,mage / priest,thief,merchant / jester,hero,seer` مع هامش قص ~10px لإزالة خطوط الفواصل.
+
+## 6. بطاقة المشاركة (Canvas)
+
+- الدالة `renderCardTo(canvas, result, portrait, bg, corner)` ترسم بطاقة 1200×675.
+- تُستدعى مرتين: للعرض، ولإعادة الرسم بدون صور لو فشل التصدير (`exportCanvas` — حالة file://).
+- عناصرها: خلفية الشلال معتمة ← إطار ذهبي مزدوج ← زخارف الزوايا ← بورتريه 310×203 يمين ← الاسم/الوصف ← أعلى 3 مهن بأشرطة.
+- حجم اسم المهنة يتقلص تلقائياً لو طال.
+
+## 7. الصوت
+
+`sfx` في الكود — نغمات WebAudio مولّدة (بدون ملفات): `tick` (كتابة)، `select`، `start`، `result`، `rare` (للبطل). حالة الكتم محفوظة في `localStorage` بمفتاح `wf_muted`.
+
+## 8. النشر
+
+### Netlify (الإنتاج — الرابط الرسمي)
+- **الموقع**: https://ikhtibar-al-shallal.netlify.app
+- **الفريق**: `nathoool92` (حساب nathoool92@gmail.com — لازم تكون مسجلاً به في netlify-cli)
+- المجلد مربوط بالموقع (`.netlify/` مُتجاهَلة في git):
+
+```bash
+netlify deploy --prod --dir .
+```
+
+### GitHub (كود + نسخة احتياطية)
+- **المستودع**: https://github.com/aragonaragon/waterfall-quiz (حساب `aragonaragon` في gh CLI)
+- GitHub Pages مفعّلة من فرع `main` → https://aragonaragon.github.io/waterfall-quiz/
+
+```bash
+git add -A && git commit -m "..." && git push   # يحدّث Pages تلقائياً خلال دقيقة
+```
+
+### روتين النشر الكامل بعد أي تعديل
+```bash
+git add -A && git commit -m "وصف التعديل" && git push
+netlify deploy --prod --dir .
+```
+
+## 9. أشياء انتبه لها (تجارب سابقة)
+
+- **لا تستخدم `background-attachment: fixed`** للخلفية — يسبب شاشة سوداء عند التمرير في بعض المتصفحات. الحل الحالي: `div.bg` بـ`position: fixed`.
+- **لا تستخدم `mix-blend-mode` للزخارف** — كان يسبب مربعات سوداء؛ الحل: شفافية حقيقية في ملف PNG.
+- **التحميل بـBlob URL** وليس data URL (أضمن على iOS Safari).
+- التوسيط بـ`margin: auto` على `.stage` وليس `align-items: center` (حتى لا يُقص أعلى الصفحة على الجوال).
+- عند تغيير الرابط الرسمي: حدّث **3 مواضع** في `<head>` (`og:url`, `og:image`, `twitter:image`).
+- يوجد موقع قديم مقفل باسم `ikhtibar-alshallal` على فريق ARAGON WORKS (حساب hello.aragonworks@gmail.com) — غير مستخدم، يمكن حذفه من لوحته.
+
+## 10. أفكار مستقبلية (لم تُنفذ)
+
+- رابط نتيجة مخصص (`?result=warrior`) بمعاينة OG خاصة لكل مهنة
+- عدّاد «أكثر مهنة تظهر للناس» (يحتاج backend بسيط أو Netlify Function)
+- موسيقى خلفية retro مع زر تشغيل
+- المزيد من الأسئلة (البنك يتحمل التوسع بلا حدود)
